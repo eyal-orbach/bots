@@ -3,6 +3,9 @@
 
 import pickle
 import sys
+
+import datetime
+
 import tweet2vec
 import numpy as np
 
@@ -36,6 +39,8 @@ def print_tweet(id, tweet_obj):
 
 
 if __name__ == '__main__':
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print("Started at %s\n" %(time))
     twts = pickle.load( open( twts_pkl_file, "rb" ) )
     input_f = sys.argv[1]
     line = ""
@@ -49,3 +54,5 @@ if __name__ == '__main__':
     ids = get_closets_ids(line_tweet_vec, twts_matrix, 10)
     for id in ids:
         print_tweet(id, twts[id])
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print("done at %s\n" %(time))
