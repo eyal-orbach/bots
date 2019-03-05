@@ -64,7 +64,7 @@ if __name__ == '__main__':
     line_tweet_vec = None
     if INDEX_ARG in sys.argv:
         arg_index = sys.argv.index(INDEX_ARG)
-        twt_id = sys.argv[arg_index+1]
+        twt_id = int(sys.argv[arg_index+1])
         print_original_tweet(twt_id)
         line_tweet_vec = twts[twt_id][tweet2vec.VECTOR]
         get_close_tweets(line_tweet_vec)
