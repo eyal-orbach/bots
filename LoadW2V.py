@@ -15,7 +15,8 @@ def load_w2v(w2v_file):
     with open(w2v_file) as f:
         content = f.readlines()
         for line_num, line in enumerate(content):
-            print("reading line %d" % line_num)
+            if line_num % 1000 == 0:
+                print("reading line %d" % line_num)
             split = line.split()
             word = split[0]
             vec = [float(x) for x in split[1:]]
@@ -30,7 +31,8 @@ def calc_tf_idf(twts_file, word_list=None):
         content = f.readlines()
         for i, line in enumerate(content):
             total_tweets += 1
-            print ("line: %d tweet: %d" % (i, total_tweets))
+            if i % 1000 == 0:
+                print ("line: %d tweet: %d" % (i, total_tweets))
             tf = {}
             tokenized = [(type, tok) for (type, tok) in yoav_tokenizer.tokenize(line)]
             for (type, tok) in tokenized:
