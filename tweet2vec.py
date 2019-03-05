@@ -18,9 +18,6 @@ VECTOR = "vector"
 w2v_pkl_file = "w2v.pkl"
 idf_pkl_file = "tf_idf.pkl"
 
-w2v = pickle.load( open( w2v_pkl_file, "rb" ) )
-word_counts, total_tweets = pickle.load( open( idf_pkl_file, "rb" ) )
-
 def get_vec(tweet):
     tokenized = [(type, tok) for (type, tok) in yoav_tokenizer.tokenize(tweet)]
     tweet_vec = np.zeros(100)
@@ -59,6 +56,8 @@ def load_twts(twts_file):
 
 
 if __name__ == '__main__':
+    w2v = pickle.load( open( w2v_pkl_file, "rb" ) )
+    word_counts, total_tweets = pickle.load( open( idf_pkl_file, "rb" ) )
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("Started at %s\n" %(time))
     twts_file = sys.argv[1]
