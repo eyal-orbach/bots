@@ -44,6 +44,8 @@ def load_twts(twts_file):
     with open(twts_file) as f:
         content = f.readlines()
         for i, line in enumerate(content):
+            if i % 1000:
+                print("reading line %d" % i)
             arr = line.split()
             user = arr[0]
             details = arr[1:4]
