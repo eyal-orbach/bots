@@ -56,7 +56,7 @@ def print_tfidf_results(word_doc_counts, total_tweets, unk_count, words):
     print ("finished calculating tfidf for %d tweets, %d words calculated %d unkown occurences"
         % (total_tweets, len(words), unk_count))
 
-    pickle.dump( word_doc_counts, open( "words_count.pkl", "wb" ) )
+    pickle.dump( (word_doc_counts, total_tweets), open( "words_count.pkl", "wb" ) )
     with open("tfidf_stats", "w") as f:
         f.writelines("finished calculating tfidf for %d tweets, %d words calculated %d unkown occurences"
                      % (total_tweets, len(words), unk_count))
