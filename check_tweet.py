@@ -9,6 +9,10 @@ import datetime
 import tweet2vec
 import numpy as np
 
+INPUT_ARG = "--input"
+
+INDEX_ARG = "--index"
+
 twts_pkl_file = "twts.pkl"
 
 
@@ -34,25 +38,60 @@ def print_tweet(id, tweet_obj):
     print("printing tweet id: %d" % id)
     print("user: %s" % tweet_obj[tweet2vec.USER])
     print("details: %s" % tweet_obj[tweet2vec.DETAILS])
-    tweet = "".join(tweet_obj[tweet2vec.TWEET].decode('utf-8')).encode("utf_8_sig")
+    tweet = (tweet_obj[tweet2vec.TWEET].decode('utf-8_sig')).encode("utf_8_sig")
     print("tweet: %s" % tweet)
+
+
+def get_close_tweets(tweet_vec):
+    twts_matrix = load_matrix(twts)
+    ids = get_closets_ids(tweet_vec, twts_matrix, 10)
+    for id in ids:
+        print_tweet(id, twts[id])
+
+
+def print_original_tweet(idx):
+    print("original tweet")
+    print_tweet(idx, twts[idx])
+    print("*****\n\n")
+
 
 
 if __name__ == '__main__':
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("Started at %s\n" %(time))
     twts = pickle.load( open( twts_pkl_file, "rb" ) )
-    input_f = sys.argv[1]
-    line = ""
-    with open(input_f) as f:
-        line = f.readlines()[0]
 
-    print("original line: " + line)
-    line_tweet_vec = tweet2vec.get_vec(line)
+    line_tweet_vec = None
+    if INDEX_ARG in sys.argv:
+        arg_index = sys.argv.index(INDEX_ARG)
+        twt_id = sys.argv[arg_index+1]
+        print_original_tweet(twt_id)
+        line_tweet_vec = twts[twt_id][tweet2vec.VECTOR]
+        get_close_tweets(line_tweet_vec)
+    elif INPUT_ARG in sys.argv:
+        arg_index = sys.argv.index(INPUT_ARG)
+        stop = False
+        while not stop:
+            nb = raw_input('Choose a tweet index: ')
+            idx = int(nb)
+            if idx <  0:
+                stop = True
+            else:
+                print_original_tweet(idx)
+                line_tweet_vec = twts[idx][tweet2vec.VECTOR]
+                get_close_tweets(line_tweet_vec)
 
-    twts_matrix = load_matrix(twts)
-    ids = get_closets_ids(line_tweet_vec, twts_matrix, 10)
-    for id in ids:
-        print_tweet(id, twts[id])
+
+
+    # input_f = sys.argv[1]
+    # line = ""
+    # with open(input_f) as f:
+    #     line = f.readlines()[0]
+    #
+    # print("original line: " + line)
+    # line_tweet_vec = tweet2vec.get_vec(line)
+    # get_close_tweets(line_tweet_vec)
+
+
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("done at %s\n" %(time))

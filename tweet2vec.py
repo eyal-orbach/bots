@@ -1,9 +1,11 @@
+import datetime
 import numpy as np
 import pickle
 import sys
 
 import yoav_tokenizer
 from LoadW2V import TYPES
+
 
 USER = "user"
 
@@ -57,6 +59,8 @@ def load_twts(twts_file):
 
 
 if __name__ == '__main__':
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print("Started at %s\n" %(time))
     twts_file = sys.argv[1]
     twts = load_twts(twts_file)
     pickle.dump( twts, open( "twts.pkl", "wb" ) )
