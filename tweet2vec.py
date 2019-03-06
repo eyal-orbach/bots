@@ -60,6 +60,6 @@ if __name__ == '__main__':
     word_counts, total_tweets = pickle.load( open( idf_pkl_file, "rb" ) )
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("Started at %s\n" %(time))
-    twts_file = sys.argv[1]
-    twts = load_twts(twts_file)
+    twts_raw_data_file = sys.argv[1]
+    twts = load_twts(twts_raw_data_file)
     pickle.dump( twts, open( "twts.pkl", "wb" ) )

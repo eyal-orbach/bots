@@ -28,7 +28,7 @@ def load_w2v(w2v_file):
 def calc_tf_idf(twts_file, word_list=None):
     word_doc_counts = {}
     total_tweets = 0
-    unk_count = 0
+    unk_heb_count = unk_url_count = 0
     with open(twts_file) as f:
         content = f.readlines()
         for i, line in enumerate(content):
@@ -44,29 +44,50 @@ def calc_tf_idf(twts_file, word_list=None):
                         if tf[tok] == 1:
                             word_doc_counts[tok] = word_doc_counts.get(tok, 0) + 1
                     else:
-                        unk_count += 1
+                        if type == "URL":
+                            unk_url_count += 1
+                        else:
+                            unk_heb_count += 1
 
 
 
 
-    return (word_doc_counts, total_tweets, unk_count)
+    return (word_doc_counts, total_tweets, unk_heb_count, unk_url_count)
 
 
-def print_tfidf_results(word_doc_counts, total_tweets, unk_count, words):
-    print ("finished calculating tfidf for %d tweets, %d words calculated %d unkown occurences"
-        % (total_tweets, len(words), unk_count))
+def print_tfidf_results(word_doc_counts, total_tweets, unk_heb_count, unk_url_count, words):
+    print ("finished calculating tfidf for %d tweets, %d words calculated %d unkown hebrew occurences "
+           "%d unkown url occurences"
+           % (total_tweets, len(words), unk_heb_count, unk_url_count))
 
     pickle.dump( (word_doc_counts, total_tweets), open( "words_count.pkl", "wb" ) )
     with open("tfidf_stats", "w") as f:
-        f.writelines("finished calculating tfidf for %d tweets, %d words calculated %d unkown occurences"
-                     % (total_tweets, len(words), unk_count))
+        f.writelines("finished calculating tfidf for %d tweets, %d words calculated %d unkown hebrew occurences "
+                     "%d unkown url occurences"
+                     % (total_tweets, len(words), unk_heb_count, unk_url_count))
 
     with open("idf.words", "w") as f:
         for word in words:
-            idf = np.log(float(total_tweets)/float(word_doc_counts[word]))
+            idf = np.log(float(total_tweets)/float(word_doc_counts.get(word,1)))
             f.writelines("%s: %f" % (word, idf))
 
+"""
+README:
+To parse w2v file 
+    run:
+        python data_parser.py --w2v  <path to w2v file>
+    output: 
+        'w2v.pkl' file
+        'tfidf_stats' file
 
+
+To get tfidf data for words in the w2v file 
+    run:
+        python data_parser.py --twts   <path to tweets file> --w2v_pkl <w2v pkl file>
+    output: 
+        words_count.pkl file
+        
+"""
 if __name__ == '__main__':
     w2v = {}
     data_w2v_file = w2v_pkl_file = twts_file = None
@@ -91,6 +112,6 @@ if __name__ == '__main__':
         w2v = pickle.load( open( w2v_pkl_file, "rb" ) )
 
     if twts_file:
-        (word_doc_counts, total_tweets, unk_count) = calc_tf_idf(twts_file, w2v.keys())
-        print_tfidf_results(word_doc_counts, total_tweets, unk_count, w2v.keys())
+        (word_doc_counts, total_tweets, unk_heb_count, unk_url_count) = calc_tf_idf(twts_file, w2v.keys())
+        print_tfidf_results(word_doc_counts, total_tweets, unk_heb_count, unk_url_count, w2v.keys())
 

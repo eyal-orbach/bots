@@ -5,9 +5,9 @@ import numpy as np
 
 BASE_TWEET = 64544 #69685
 
-BASE_DIST_FACTOR = 0.5
+BASE_DIST_FACTOR = 0.7
 
-DENSITY_FACTOR = 0.5
+DENSITY_FACTOR = 0.3
 
 DIST_FROM_BASE = "dist_from_base"
 
@@ -80,6 +80,7 @@ def print_top_users(top_k_users, users):
             data = users[u[0]]
             f.writelines("user name: %s\n" % u[0])
             f.writelines("avg_dist: %f\n" % data[AVG_DIST])
+            f.writelines("base_dist: %f\n" % data[DIST_FROM_BASE])
             f.writelines("---")
             f.writelines("\ntweets:\n")
             for t in data[TWEETS]:
