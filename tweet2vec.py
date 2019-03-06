@@ -4,7 +4,7 @@ import pickle
 import sys
 
 import yoav_tokenizer
-from LoadW2V import TYPES
+from data_parser import TYPES
 
 
 USER = "user"
