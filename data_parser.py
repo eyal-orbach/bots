@@ -1,5 +1,8 @@
 import sys
 import pickle
+
+import datetime
+
 import yoav_tokenizer
 import numpy as np
 
@@ -89,6 +92,8 @@ To get tfidf data for words in the w2v file
         
 """
 if __name__ == '__main__':
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print("started at %s\n" %(time))
     w2v = {}
     data_w2v_file = w2v_pkl_file = twts_file = None
     if W2V_ARG in sys.argv:
@@ -115,3 +120,5 @@ if __name__ == '__main__':
         (word_doc_counts, total_tweets, unk_heb_count, unk_url_count) = calc_tf_idf(twts_file, w2v.keys())
         print_tfidf_results(word_doc_counts, total_tweets, unk_heb_count, unk_url_count, w2v.keys())
 
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print("done at %s\n" %(time))
