@@ -116,5 +116,7 @@ if __name__ == '__main__':
     f_users = filter_users(users)
     users = calc_density(f_users)
     users = calc_distance_from_base(f_users, base_vec)
-    top_k_users = get_top_k(f_users, 30)
+    top_k_users = get_top_k(f_users, 100)
     print_top_users(top_k_users, f_users)
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print("done at %s\n" %(time))
