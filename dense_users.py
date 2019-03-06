@@ -7,6 +7,8 @@ AVG_DIST = "avg_dist"
 
 CENTROID = "centroid"
 
+MINIMUM_TWEETS = 5
+
 LAMBDA_DIST = 1
 
 TWEETS = "tweets"
@@ -74,11 +76,16 @@ def print_top_users(top_k_users, users):
                 f.writelines("tweet: " + t[tweet2vec.TWEET] + "\n")
 
 
+def filter_users(users):
+    return {k:u for k, u in users.iteritems() if len(u[TWEETS]) > MINIMUM_TWEETS}
+
+
 if __name__ == '__main__':
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("Started at %s\n" %(time))
     twts = pickle.load( open( twts_pkl_file, "rb" ) )
     users = map_to_users(twts)
-    users = calc_density(users)
-    top_k_users = get_top_k(users, 30)
-    print_top_users(top_k_users, users)
+    f_users = filter_users(users)
+    users = calc_density(f_users)
+    top_k_users = get_top_k(f_users, 30)
+    print_top_users(top_k_users, f_users)
