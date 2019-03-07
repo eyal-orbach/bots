@@ -18,7 +18,9 @@ def load_w2v(w2v_file):
     w2v ={}
     with open(w2v_file) as f:
         content = f.readlines()
-        for line_num, line in enumerate(content):
+        line_num = 0
+        for line in content:
+            line_num += 1
             if line_num % 1000 == 0:
                 print("reading line %d" % line_num)
             split = line.split()
