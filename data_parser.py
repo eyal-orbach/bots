@@ -36,10 +36,10 @@ def calc_tf_idf(twts_file, word_list=None):
     unk_heb_count = unk_url_count = 0
     with open(twts_file) as f:
         content = f.readlines()
-        for i, line in enumerate(content):
+        for line in content:
             total_tweets += 1
-            if i % 1000 == 0:
-                print ("line: %d tweet: %d" % (i, total_tweets))
+            if total_tweets % 1000 == 0:
+                print ("tweet: %d" % (total_tweets))
             tf = {}
             tokenized = [(type, tok) for (type, tok) in yoav_tokenizer.tokenize(line)]
             for (type, tok) in tokenized:
