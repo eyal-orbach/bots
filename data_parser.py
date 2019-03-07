@@ -30,7 +30,7 @@ def load_w2v(w2v_file):
     return w2v
 
 
-def calc_tf_idf(twts_file, word_list=None):
+def calc_tf_idf(twts_file, w2v=None):
     word_doc_counts = {}
     total_tweets = 0
     unk_heb_count = unk_url_count = 0
@@ -44,7 +44,7 @@ def calc_tf_idf(twts_file, word_list=None):
             tokenized = [(type, tok) for (type, tok) in yoav_tokenizer.tokenize(line)]
             for (type, tok) in tokenized:
                 if type in TYPES:
-                    if not word_list or tok in word_list:
+                    if not w2v or tok in w2v:
                         tf[tok] = tf.get(tok, 0) + 1
                         if tf[tok] == 1:
                             word_doc_counts[tok] = word_doc_counts.get(tok, 0) + 1
@@ -53,9 +53,6 @@ def calc_tf_idf(twts_file, word_list=None):
                             unk_url_count += 1
                         else:
                             unk_heb_count += 1
-
-
-
 
     return (word_doc_counts, total_tweets, unk_heb_count, unk_url_count)
 
@@ -119,7 +116,7 @@ if __name__ == '__main__':
         w2v = pickle.load( open( w2v_pkl_file, "rb" ) )
 
     if twts_file:
-        (word_doc_counts, total_tweets, unk_heb_count, unk_url_count) = calc_tf_idf(twts_file, w2v.keys())
+        (word_doc_counts, total_tweets, unk_heb_count, unk_url_count) = calc_tf_idf(twts_file, w2v)
         print_tfidf_results(word_doc_counts, total_tweets, unk_heb_count, unk_url_count, w2v.keys())
 
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
