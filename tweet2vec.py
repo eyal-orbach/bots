@@ -6,6 +6,9 @@ import sys
 import yoav_tokenizer
 from data_parser import TYPES
 
+INPUT_ARG = "--input"
+
+FILE_ARG = "--file"
 
 USER = "user"
 
@@ -18,7 +21,11 @@ VECTOR = "vector"
 w2v_pkl_file = "w2v.pkl"
 idf_pkl_file = "tf_idf.pkl"
 
-def get_vec(tweet):
+
+# w2v_pkl_file = "w2v.sml.pkl"
+# idf_pkl_file = "tfidf.sml.pkl"
+
+def get_vec(tweet, w2v, word_counts, total_tweets):
     tokenized = [(type, tok) for (type, tok) in yoav_tokenizer.tokenize(tweet)]
     tweet_vec = np.zeros(100)
     terms = {}
@@ -42,24 +49,43 @@ def load_twts(twts_file):
     tweets = {}
     with open(twts_file) as f:
         content = f.readlines()
-        for i, line in enumerate(content):
+        i=0
+        for line in content:
+            i += 1
             if i % 100:
                 print("reading line %d" % i)
             arr = line.split()
             user = arr[0]
             details = arr[1:4]
             tweet = " ".join(arr[4:])
-            vector = get_vec(tweet)
+            vector = get_vec(tweet, w2v, word_counts, total_tweets)
             tweets[i] = {USER: user, DETAILS: details, TWEET: tweet, VECTOR: vector}
 
     return tweets
 
 
 if __name__ == '__main__':
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print("started at %s\n" %(time))
     w2v = pickle.load( open( w2v_pkl_file, "rb" ) )
     word_counts, total_tweets = pickle.load( open( idf_pkl_file, "rb" ) )
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print("Started at %s\n" %(time))
-    twts_raw_data_file = sys.argv[1]
-    twts = load_twts(twts_raw_data_file)
-    pickle.dump( twts, open( "twts.pkl", "wb" ) )
+    print("finished loading at %s\n" %(time))
+
+    if FILE_ARG in sys.argv:
+        arg_index = sys.argv.index(FILE_ARG)
+        twts_raw_data_file = sys.argv[1]
+        twts = load_twts(twts_raw_data_file)
+        pickle.dump( twts, open( "twts.pkl", "wb" ) )
+
+    if INPUT_ARG in sys.argv:
+        arg_index = sys.argv.index(INPUT_ARG)
+        stop = False
+        while not stop:
+            nb = raw_input('enter sentence: ')
+            if nb == "-1":
+                stop = True
+            else:
+                vec = get_vec(nb, w2v, word_counts, total_tweets)
+                print("vector value is:\n")
+                print(vec)

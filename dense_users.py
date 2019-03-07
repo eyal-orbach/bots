@@ -2,6 +2,7 @@ import tweet2vec
 import datetime
 import pickle
 import numpy as np
+import sys
 
 BASE_TWEET = 64544 #69685
 
@@ -87,6 +88,21 @@ def print_top_users(top_k_users, users):
                 f.writelines("details: " + get_details(t[tweet2vec.DETAILS])+"\n")
                 f.writelines("tweet: " + t[tweet2vec.TWEET] + "\n")
 
+def print_top_users_console(top_k_users, users):
+    for i, u in enumerate(top_k_users):
+        print("\n\n*********")
+        print("user number: %d\n" % i)
+        data = users[u[0]]
+        print("user name: %s\n" % u[0])
+        print("avg_dist: %f\n" % data[AVG_DIST])
+        print("base_dist: %f\n" % data[DIST_FROM_BASE])
+        print("---")
+        print("\ntweets:\n")
+        for t in data[TWEETS]:
+            print("details: " + get_details(t[tweet2vec.DETAILS])+"\n")
+            print("tweet: " + t[tweet2vec.TWEET] + "\n")
+
+
 
 def filter_users(users):
     return {k:u for k, u in users.iteritems() if len(u[TWEETS]) > MINIMUM_TWEETS}
@@ -99,25 +115,49 @@ def get_base_vec(twts):
 
 
 def calc_distance_from_base(f_users, base_vec):
-    for user in users:
+    for user in f_users:
         dist_from_base = (np.linalg.norm(users[user][CENTROID]-base_vec))
-        users[user][DIST_FROM_BASE] = dist_from_base
+        f_users[user][DIST_FROM_BASE] = dist_from_base
 
-    return users
+    return f_users
 
 
 if __name__ == '__main__':
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("Started at %s\n" %(time))
     twts = pickle.load( open( twts_pkl_file, "rb" ) )
-    
-    base_vec = get_base_vec(twts)
-    
+
+
     users = map_to_users(twts)
     f_users = filter_users(users)
-    users = calc_density(f_users)
-    users = calc_distance_from_base(f_users, base_vec)
-    top_k_users = get_top_k(f_users, 100)
-    print_top_users(top_k_users, f_users)
+    d_users = calc_density(f_users)
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print("done at %s\n" %(time))
+    print("finished loading tweets at %s\n" %(time))
+    if "--input" in sys.argv:
+        w2v = pickle.load( open( tweet2vec.w2v_pkl_file, "rb" ) )
+        word_counts, total_tweets = pickle.load( open( tweet2vec.idf_pkl_file, "rb" ) )
+        time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print("finished loading model at %s\n" %(time))
+        stop = False
+        while not stop:
+            density_f = raw_input('Enter weig0.ht for density([0-1]): ')
+            DENSITY_FACTOR = float(density_f)
+            sim_f = raw_input('Enter weight for similarity to sentence([0-1]): ')
+            BASE_DIST_FACTOR = float(sim_f)
+            nb = raw_input('Enter line: ')
+            if nb == "-1":
+                stop = True
+            else:
+                base_vec = tweet2vec.get_vec(nb, w2v, word_counts, total_tweets)
+                print(base_vec)
+                print("*************")
+                final_users = calc_distance_from_base(d_users, base_vec)
+                top_k_users = get_top_k(final_users, 40)
+                print_top_users_console(top_k_users, final_users)
+    else:
+        base_vec = get_base_vec(twts)
+        users = calc_distance_from_base(f_users, base_vec)
+        top_k_users = get_top_k(f_users, 100)
+        print_top_users(top_k_users, f_users)
+        time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print("done at %s\n" %(time))
