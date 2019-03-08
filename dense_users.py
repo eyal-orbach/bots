@@ -140,7 +140,7 @@ if __name__ == '__main__':
         print("finished loading model at %s\n" %(time))
         stop = False
         while not stop:
-            density_f = raw_input('Enter weig0.ht for density([0-1]): ')
+            density_f = raw_input('Enter weight for density([0-1]): ')
             DENSITY_FACTOR = float(density_f)
             sim_f = raw_input('Enter weight for similarity to sentence([0-1]): ')
             BASE_DIST_FACTOR = float(sim_f)
