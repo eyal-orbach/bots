@@ -5,6 +5,8 @@ import numpy as np
 import dense_users
 import tweet2vec
 
+DIST = "dist"
+
 MATRIX = "matrix"
 
 TIMED_VECTOR = "timed_vector"
@@ -22,11 +24,11 @@ def get_max_timestamp():
 
 def dist_between_users(user_a, user_b):
     accumelator = 0
-    if len(user_a[dense_users.TWEETS]) < len(user_b[1][dense_users.TWEETS]):
+    if len(user_a[dense_users.TWEETS]) < len(user_b[dense_users.TWEETS]):
         u1 = user_a
-        u2 = user_b[1]
+        u2 = user_b
     else:
-        u1 = user_b[1]
+        u1 = user_b
         u2 = user_a
 
     min_tweets = len(u1[dense_users.TWEETS])
@@ -34,7 +36,7 @@ def dist_between_users(user_a, user_b):
 
     for atwt in u1[dense_users.TWEETS]:
         vec = atwt[TIMED_VECTOR]
-        min_dist = np.amin(u2[MATRIX].dot(vec/np.linalg.norm(vec)))
+        min_dist = 1-np.amax(u2[MATRIX].dot(vec/np.linalg.norm(vec)))
         accumelator += min_dist
 
     return float(accumelator) / min_tweets
@@ -75,8 +77,8 @@ def is_farther_from_base_user(u1, u2):
     return -int(np.sign(dist1 - dist2))
 
 def get_top_k_similar_users(users, k):
-    # sorted_users = sorted(users.items(), key=lambda x:x[1][AVG_DIST])
-    sorted_users = sorted(users.items(), cmp = is_farther_from_base_user)
+    sorted_users = sorted(users.items(), key=lambda x:x[1][DIST])
+    # sorted_users = sorted(users.items(), cmp = is_farther_from_base_user)
     return sorted_users[:k]
 
 def print_top_similar_users_console(top_k_users, users):
@@ -85,11 +87,22 @@ def print_top_similar_users_console(top_k_users, users):
         print("user number: %d\n" % i)
         data = users[u[0]]
         print("user name: %s\n" % u[0])
+        print("user dist: %f\n" % data[DIST])
         print("---")
         print("\ntweets:\n")
         for t in data[dense_users.TWEETS]:
-            print("details: " + dense_users.get_details(t[tweet2vec.DETAILS])+"\n")
+            epoch = int(float(t[tweet2vec.DETAILS][1]))
+            ttime = datetime.datetime.fromtimestamp(epoch)
+            print("time: %s\n" % ttime)
+
             print("tweet: " + t[tweet2vec.TWEET] + "\n")
+
+
+def add_dist_from_base_user(users):
+    for user in users:
+        dist = dist_between_users(base_user, users[user])
+        users[user][DIST] = dist
+    return users
 
 
 if __name__ == '__main__':
@@ -100,9 +113,12 @@ if __name__ == '__main__':
     print("loaded twts at %s\n" %(time))
     users = dense_users.map_to_users(twts)
     users = add_time_to_vectors(users)
+    global base_user
+    base_user = users['lili2307li2307']
+    users = add_dist_from_base_user(users)
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("manipulated data %s\n" %(time))
-    base_user = users['yonatanshraga']
+
     top_close_users = get_top_k_similar_users(users, 30)
     print_top_similar_users_console(top_close_users, users)
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
