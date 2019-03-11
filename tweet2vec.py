@@ -74,7 +74,7 @@ if __name__ == '__main__':
 
     if FILE_ARG in sys.argv:
         arg_index = sys.argv.index(FILE_ARG)
-        twts_raw_data_file = sys.argv[1]
+        twts_raw_data_file = sys.argv[arg_index+1]
         twts = load_twts(twts_raw_data_file)
         pickle.dump( twts, open( "twts.pkl", "wb" ) )
 
@@ -89,3 +89,11 @@ if __name__ == '__main__':
                 vec = get_vec(nb, w2v, word_counts, total_tweets)
                 print("vector value is:\n")
                 print(vec)
+
+
+def eucleadean_dist(base_vec, target_vec):
+    return np.linalg.norm(target_vec - base_vec)
+
+
+def cos_dist(base_vec, target_vec):
+    return np.dot(base_vec, target_vec)/(np.linalg.norm(base_vec)*np.linalg.norm(target_vec))

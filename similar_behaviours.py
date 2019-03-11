@@ -5,6 +5,8 @@ import numpy as np
 import dense_users
 import tweet2vec
 
+AMOUNT_OF_TWEETS_FACTOR = 2
+
 DIST = "dist"
 
 MATRIX = "matrix"
@@ -14,6 +16,8 @@ TIMED_VECTOR = "timed_vector"
 TIME_DIMENSIONS = 4
 
 max_timestamp = 0
+min_timestamp = float("inf")
+diff = 0
 
 def get_max_timestamp():
     return None
@@ -39,7 +43,7 @@ def dist_between_users(user_a, user_b):
         min_dist = 1-np.amax(u2[MATRIX].dot(vec/np.linalg.norm(vec)))
         accumelator += min_dist
 
-    return float(accumelator) / min_tweets
+    return float(accumelator) / (min_tweets ** AMOUNT_OF_TWEETS_FACTOR)
 
 
 
@@ -47,7 +51,7 @@ def dist_between_users(user_a, user_b):
 
 def add_timed_vec(twt):
     time = float(twt[tweet2vec.DETAILS][1])
-    normalized_time = time/max_timestamp
+    normalized_time = (time - min_timestamp) / diff
     vec = twt[tweet2vec.VECTOR]
     time_dims = np.ones(TIME_DIMENSIONS) * normalized_time
     timed_vec = np.concatenate((vec, time_dims), axis=0)
@@ -64,11 +68,14 @@ def add_time_to_vectors(users):
         utwts = user[dense_users.TWEETS]
         for i, twt in enumerate(utwts):
             max_timestamp = max([max_timestamp, float(twt[tweet2vec.DETAILS][1])])
+            min_timestamp = min([min_timestamp, float(twt[tweet2vec.DETAILS][1])])
             t = add_timed_vec(twt)
             utwts[i] = t
             vec =t[TIMED_VECTOR]
             timed_vecs.append(vec/np.linalg.norm(vec))
         user[MATRIX] = np.array(timed_vecs)
+
+    diff = max_timestamp - min_timestamp
     return users
 
 def is_farther_from_base_user(u1, u2):
@@ -114,7 +121,8 @@ if __name__ == '__main__':
     users = dense_users.map_to_users(twts)
     users = add_time_to_vectors(users)
     global base_user
-    base_user = users['lili2307li2307']
+    # base_user = users['lili2307li2307']
+    base_user = users['Vitaliko']
     users = add_dist_from_base_user(users)
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("manipulated data %s\n" %(time))

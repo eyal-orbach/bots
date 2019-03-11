@@ -1,8 +1,11 @@
-import tweet2vec
 import datetime
 import pickle
-import numpy as np
 import sys
+
+import numpy as np
+
+import tweet2vec
+from tweet2vec import eucleadean_dist
 
 BASE_TWEET = 64544 #69685
 
@@ -45,7 +48,7 @@ def calc_density(users):
         sum = np.zeros((100,))
         count = 0
         for twt in utwts:
-            count+=1
+            count += 1
             sum += twt[tweet2vec.VECTOR]
         centroid = sum/float(count)
         users[user][CENTROID] = centroid
@@ -115,8 +118,8 @@ def get_base_vec(twts):
 
 
 def calc_distance_from_base(f_users, base_vec):
-    for user in f_users:
-        dist_from_base = (np.linalg.norm(users[user][CENTROID]-base_vec))
+    for user, data in f_users.iteritems():
+        dist_from_base = eucleadean_dist(base_vec, data[CENTROID])
         f_users[user][DIST_FROM_BASE] = dist_from_base
 
     return f_users
