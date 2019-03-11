@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# encoding: utf8
+
 import datetime
 import pickle
 import sys
@@ -29,16 +32,23 @@ twts_pkl_file = "twts.pkl"
 
 output_file = "dense.out"
 
+max_timestamp = 0
+min_timestamp = float("inf")
+diff = 0
 
 
 def map_to_users(twts):
+    global max_timestamp, min_timestamp, diff
     users_map = {}
     for idx in twts:
         twt = twts[idx]
+        max_timestamp = max([max_timestamp, float(twt[tweet2vec.DETAILS][1])])
+        min_timestamp = min([min_timestamp, float(twt[tweet2vec.DETAILS][1])])
         user = twt[tweet2vec.USER]
         if user not in users_map:
             users_map[user] = {TWEETS:[]}
         users_map[user][TWEETS].append(twt)
+    diff = max_timestamp - min_timestamp
     return users_map
 
 
@@ -123,6 +133,14 @@ def calc_distance_from_base(f_users, base_vec):
         f_users[user][DIST_FROM_BASE] = dist_from_base
 
     return f_users
+
+
+
+# example usage
+# density weight 0.2
+# similarity weight 0.8
+# sentence: "ביבי מבטיח נאום "חד כתער" באסיפה הכללית מחר. מה יהיה שם? איראן? טרור?? צדקת דרכנו??? שואה???? שרה והשגריר המיקרונזי לא יכולים לחכות."
+#
 
 
 if __name__ == '__main__':

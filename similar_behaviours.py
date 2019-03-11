@@ -15,16 +15,6 @@ TIMED_VECTOR = "timed_vector"
 
 TIME_DIMENSIONS = 4
 
-max_timestamp = 0
-min_timestamp = float("inf")
-diff = 0
-
-def get_max_timestamp():
-    return None
-
-
-
-
 
 def dist_between_users(user_a, user_b):
     accumelator = 0
@@ -50,6 +40,7 @@ def dist_between_users(user_a, user_b):
 
 
 def add_timed_vec(twt):
+    from dense_users import min_timestamp, diff
     time = float(twt[tweet2vec.DETAILS][1])
     normalized_time = (time - min_timestamp) / diff
     vec = twt[tweet2vec.VECTOR]
@@ -62,20 +53,15 @@ def add_timed_vec(twt):
 
 
 def add_time_to_vectors(users):
-    global max_timestamp
     for user in users.values():
         timed_vecs = []
         utwts = user[dense_users.TWEETS]
         for i, twt in enumerate(utwts):
-            max_timestamp = max([max_timestamp, float(twt[tweet2vec.DETAILS][1])])
-            min_timestamp = min([min_timestamp, float(twt[tweet2vec.DETAILS][1])])
             t = add_timed_vec(twt)
             utwts[i] = t
             vec =t[TIMED_VECTOR]
             timed_vecs.append(vec/np.linalg.norm(vec))
         user[MATRIX] = np.array(timed_vecs)
-
-    diff = max_timestamp - min_timestamp
     return users
 
 def is_farther_from_base_user(u1, u2):
