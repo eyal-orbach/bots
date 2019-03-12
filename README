@@ -1,0 +1,62 @@
+
+python 2.7
+
+############
+March 12 2019
+
+Currently this is a command line process with interaction via the console.
+This has not yet been optimized for performance and loads all data to memory.
+All the below utilization scripts work at around 4 minutes on a corpus of 1 million tweets.
+
+**********************
+initialization script:
+assumes w2v.pkl and tf_idf.pkl exist in current dir.
+has 2 modes:
+1) given a text file of tweets in the following format
+<userid> <epochtime> <tweetid> <tweet text>
+it cretes a twts.pkl file with a vector for each tweet
+run
+python tweet2vec --file <tweets_text_file>
+
+2) given a sentence returns its tweetvec
+run
+python tweet2vec --input
+
+
+**********************
+utilization scripts:
+assumes w2v.pkl, tf_idf.pkl, tweets.pkl exist in current dir.
+
+
+1) dense users
+returns "one track mind" users which corelate to a given sentence
+run
+python dense_users.py --input
+
+the console will ask for
+density factor
+similarity factor
+sentence
+
+the following works nicely
+
+# density weight 0.2
+# similarity weight 0.8
+# sentence: "ביבי מבטיח נאום "חד כתער" באסיפה הכללית מחר. מה יהיה שם? איראן? טרור?? צדקת דרכנו??? שואה???? שרה והשגריר המיקרונזי לא יכולים לחכות."
+
+2) similar behaviour
+returns users that tweeted related tweets at close times
+run
+python similar_behaviours.py
+
+(user name is hardcoded in the similar_behaviours.py file and should exist in the data of the twt.pkl file)
+
+3)similar tweets
+given a time window and a sentence will show similar tweets from that time frame (extracted from twts.pkl)
+run
+python similar_tweets
+
+
+
+
+
