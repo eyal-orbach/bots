@@ -18,19 +18,19 @@ TWEET = "tweet"
 
 VECTOR = "vector"
 
-w2v_pkl_file = "w2v.pkl"
-idf_pkl_file = "tf_idf.pkl"
+w2v_pkl_file = "data/w2v.pkl"
+idf_pkl_file = "data/tf_idf.pkl"
 
-
-# w2v_pkl_file = "w2v.sml.pkl"
-# idf_pkl_file = "tfidf.sml.pkl"
+#
+# w2v_pkl_file = "data/w2v.sml.pkl"
+# idf_pkl_file = "data/tfidf.sml.pkl"
 
 def get_vec(tweet, w2v, word_counts, total_tweets):
     tokenized = [(type, tok) for (type, tok) in yoav_tokenizer.tokenize(tweet)]
     tweet_vec = np.zeros(100)
     terms = {}
     for (type, tok) in tokenized:
-        if type in TYPES and tok in w2v:
+        if type in TYPES and tok in w2v and tok in word_counts:
             if tok in terms:
                 terms[tok]["tf"] += 1
             else:

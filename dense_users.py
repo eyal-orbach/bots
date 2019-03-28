@@ -28,7 +28,7 @@ LAMBDA_DIST = 1
 
 TWEETS = "tweets"
 
-twts_pkl_file = "twts.pkl"
+twts_pkl_file = "data/twts.pkl"
 
 output_file = "dense.out"
 
