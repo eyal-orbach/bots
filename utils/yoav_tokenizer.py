@@ -1,8 +1,6 @@
-#!/usr/bin/env python
-# encoding: utf8
+#!usr/bin/env python
+# -*- coding: utf-8 -*-
 
-## Copyright 2010 Yoav Goldberg
-##
 ##    This program is free software: you can redistribute it and/or modify
 ##    it under the terms of the GNU General Public License as published by
 ##    the Free Software Foundation, either version 3 of the License, or
@@ -58,24 +56,38 @@ _TEAMIM= u"\u0591-\u05af"
 
 undigraph = lambda x:x.replace(u"\u05f0",u"׳•׳•").replace(u"\u05f1",u"׳•׳™").replace("\u05f2","׳™׳™").replace("\ufb4f","׳׳").replace(u"\u200d","")
 
-_heb_letter = ur"([׳-׳×%s]|[׳“׳’׳–׳¦׳×׳˜]')" % _NIKUD
+_heb_letter = r"([׳-׳×%s]|[׳“׳’׳–׳¦׳×׳˜]')" % _NIKUD
 
 # a heb word including single quotes, dots and dashes  / this leaves last-dash out of the word
-_heb_word_plus = ur"[׳-׳×%s]([.'`\"\-/\\]?['`]?[׳-׳×%s0-9'`])*" % (_NIKUD,_NIKUD)
+_heb_word_plus = r"[׳-׳×%s]([.'`\"\-/\\]?['`]?[׳-׳×%s0-9'`])*" % (_NIKUD,_NIKUD)
 
 # english/latin words  (do not care about abbreviations vs. eos for english)
-_eng_word = ur"[a-zA-Z][a-zA-Z0-9'.]*"
+_eng_word = r"[a-zA-Z][a-zA-Z0-9_'.]*"
 
 _hashtag ="(#[^\s]+)"
 _atsign ="(@[^\s]+)"
 
-_emoji = u"(\ud83d[\ude00-\ude4f])|"\
-                       u"(\ud83c[\udf00-\uffff])|" \
-                       u"(\ud83d[\u0000-\uddff])|" \
-                       u"(\ud83d[\ude80-\udeff])|" \
-                       u"(\u263a[\ufe0a-\ufeff])|" \
-                       u"(\u270b)|" \
-                       u"(\ud83c[\udde0-\uddff])"
+###python3
+#_emoji=r"[\u263a-\U0001f645]"
+
+_emoji = r"[\U00000080-\U000002AF]|[\U00000300-\U000003FF]|[\U00000600-\U000006FF]|[\U00000C00-\U00000C7F]"\
+         r"[\U00001DC0-\U00001DFF]|[ \U00001E00-\U00001EFF]|[ \U00002000-\U0000209F]|[ \U000020D0-\U0000214F]|" \
+         r"[ \U00002190-\U000023FF]|[ \U00002460-\U000025FF]|[ \U00002600-\U000027EF]|[ \U00002900-\U000029FF]|" \
+         r"[ \U00002B00-\U00002BFF]|[ \U00002C60-\U00002C7F]|[ \U00002E00-\U00002E7F]|[ \U00003000-\U0000303F]|" \
+         r"[ \U0000A490-\U0000A4CF]|[ \U0000E000-\U0000F8FF]|[ \U0000FE00-\U0000FE0F]|[ \U0000FE30-\U0000FE4F]|" \
+         r"[ \U0001F000-\U0001F02F]|[ \U0001F0A0-\U0001F0FF]|[ \U0001F100-\U0001F64F]|[ \U0001F680-\U0001F6FF]|" \
+         r"[ \U0001F910-\U0001F96B]|[ \U0001F980-\U0001F9E0]"
+
+
+#
+# ##python2
+# _emoji = "(\ud83d[\ude00-\ude4f])|"\
+#                        "(\ud83c[\udf00-\uffff])|" \
+#                        "(\ud83d[\u0000-\uddff])|" \
+#                        "(\ud83d[\ude80-\udeff])|" \
+#                        "(\u263a[\ufe0a-\ufeff])|" \
+#                        "(\u270b)|" \
+#                        "(\ud83c[\udde0-\uddff])"
 
 
 # numerical expression (numbers and various separators)
@@ -93,9 +105,9 @@ _internal_punct = r"[,;:\-&]"
 
 # junk
 #_junk = ur"[^׳-׳×%sa-zA-Z0-9%%&!?.,;:\-()\[\]{}\"'\/\\+]+" #% _NIKUD
-_junk = ur"[^׳-׳×%sa-zA-Z0-9!?.,:;\-()\[\]{}]+" % (_NIKUD) #%%&!?.,;:\-()\[\]{}\"'\/\\+]+" #% _NIKUD
+_junk = r"[^׳-׳×%sa-zA-Z0-9!?.,:;\-()\[\]{}]+" % (_NIKUD)
 
-is_all_heb = re.compile(ur"^%s+$" % (_heb_letter),re.UNICODE).match
+is_all_heb = re.compile(r"^%s+$" % (_heb_letter),re.UNICODE).match
 is_a_number = re.compile(r"^%s$" % _numeric ,re.UNICODE).match
 is_all_lat= re.compile(r"^[a-zA-Z]+$",re.UNICODE).match
 is_sep = re.compile(r"^\|+$").match
@@ -118,7 +130,7 @@ scanner = re.Scanner([
     (_emoji, emoji),
     (_atsign, atsign),
     (_hashtag, hashtag),
-    (_junk, junk),
+    (_junk, junk)
 ])
 
 ##### tokenize
@@ -127,6 +139,7 @@ def tokenize(sent):
     parts,reminder = scanner.scan(tok)
     assert(not reminder)
     return parts
+
 
 if __name__=='__main__':
     import sys
@@ -141,11 +154,10 @@ if __name__=='__main__':
     #FILTER = set(['JUNK','ENG'])
     FILTER = set()
 
-    f = open("../data/heb_twts.sml")
+    f = open("../data/heb_twts.sml", "rb")
     for sent in codecs.getreader(opts.in_enc)(f):
-        #print u"\n".join(["%s %s" % (which,tok) for which,tok in tokenize(sent) if which not in FILTER]).encode("utf8")
-        # for part in sent.split():
-        #     print part
-        #     for ch in part:
-        #         print repr(ch)
-        print " ".join([tok + "(" + which + ")" for (which,tok) in tokenize(sent)]).encode(opts.out_enc)
+        encoded_sent = sent
+
+        print(" ".join([tok + "(" + which + ")" for (which,tok) in tokenize(encoded_sent)]))
+
+

@@ -1,9 +1,9 @@
+import datetime
 import pickle
 
-import datetime
 import numpy as np
-import dense_users
-import tweet2vec
+
+from logic import dense_users
 
 AMOUNT_OF_TWEETS_FACTOR = 2
 
@@ -40,7 +40,7 @@ def dist_between_users(user_a, user_b):
 
 
 def add_timed_vec(twt):
-    from dense_users import min_timestamp, diff
+    from logic.dense_users import min_timestamp, diff
     time = float(twt[tweet2vec.DETAILS][1])
     normalized_time = (time - min_timestamp) / diff
     vec = twt[tweet2vec.VECTOR]
@@ -101,7 +101,7 @@ def add_dist_from_base_user(users):
 if __name__ == '__main__':
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("Started at %s\n" %(time))
-    twts = pickle.load( open( dense_users.twts_pkl_file, "rb" ) )
+    twts = pickle.load(open(dense_users.twts_pkl_file, "rb"), encoding="latin1")
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("loaded twts at %s\n" %(time))
     users = dense_users.map_to_users(twts)

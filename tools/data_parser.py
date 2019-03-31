@@ -1,10 +1,10 @@
-import sys
-import pickle
-
 import datetime
+import pickle
+import sys
 
-import yoav_tokenizer
 import numpy as np
+
+from utils import yoav_tokenizer
 
 W2V_PKL = "--w2v_pkl"
 

@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # encoding: utf8
 
+import datetime
 import pickle
 import sys
 
-import datetime
-
-import tweet2vec
 import numpy as np
+
+from logic import tweet2vec
 
 INPUTIDX_ARG = "--inputidx"
 INPUT_ARG = "--input"
@@ -72,7 +72,7 @@ if __name__ == '__main__':
         arg_index = sys.argv.index(INPUTIDX_ARG)
         stop = False
         while not stop:
-            nb = raw_input('Choose a tweet index: ')
+            nb = input('Choose a tweet index: ')
             idx = int(nb)
             if idx <  0:
                 stop = True
@@ -83,14 +83,14 @@ if __name__ == '__main__':
     elif INPUT_ARG in sys.argv:
         time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print("started at %s\n" %(time))
-        w2v = pickle.load( open( tweet2vec.w2v_pkl_file, "rb" ) )
-        word_counts, total_tweets = pickle.load( open( tweet2vec.idf_pkl_file, "rb" ) )
+        w2v = pickle.load(open(tweet2vec.w2v_pkl_file, "rb"))
+        word_counts, total_tweets = pickle.load(open(tweet2vec.idf_pkl_file, "rb"))
         time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print("finished loading at %s\n" %(time))
         arg_index = sys.argv.index(INPUT_ARG)
         stop = False
         while not stop:
-            nb = raw_input('Enter line: ')
+            nb = input('Enter line: ')
             if nb == "-1":
                 stop = True
             else:

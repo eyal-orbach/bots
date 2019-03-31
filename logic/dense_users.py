@@ -1,5 +1,6 @@
-#!/usr/bin/env python
-# encoding: utf8
+#!usr/bin/env python
+# -*- coding: utf-8 -*-
+
 
 import datetime
 import pickle
@@ -7,8 +8,8 @@ import sys
 
 import numpy as np
 
-import tweet2vec
-from tweet2vec import eucleadean_dist
+import logic.tweet2vec as tweet2vec
+from logic.tweet2vec import eucleadean_dist
 
 BASE_TWEET = 64544 #69685
 
@@ -28,7 +29,7 @@ LAMBDA_DIST = 1
 
 TWEETS = "tweets"
 
-twts_pkl_file = "twts.pkl"
+twts_pkl_file = "data/twts.pkl"
 
 output_file = "dense.out"
 
@@ -78,9 +79,28 @@ def compare_by_dens_and_dist(a, b):
 
 def get_top_k(users, k):
     # sorted_users = sorted(users.items(), key=lambda x:x[1][AVG_DIST])
-    sorted_users = sorted(users.items(), cmp = compare_by_dens_and_dist)
+    sorted_users = sorted(users.items(), key=cmp_to_key(compare_by_dens_and_dist))
     return sorted_users[:k]
 
+
+def cmp_to_key(mycmp):
+    'Convert a cmp= function into a key= function'
+    class K(object):
+        def __init__(self, obj, *args):
+            self.obj = obj
+        def __lt__(self, other):
+            return mycmp(self.obj, other.obj) < 0
+        def __gt__(self, other):
+            return mycmp(self.obj, other.obj) > 0
+        def __eq__(self, other):
+            return mycmp(self.obj, other.obj) == 0
+        def __le__(self, other):
+            return mycmp(self.obj, other.obj) <= 0
+        def __ge__(self, other):
+            return mycmp(self.obj, other.obj) >= 0
+        def __ne__(self, other):
+            return mycmp(self.obj, other.obj) != 0
+    return K
 
 def get_details(details):
     return " ".join(details)
@@ -118,7 +138,7 @@ def print_top_users_console(top_k_users, users):
 
 
 def filter_users(users):
-    return {k:u for k, u in users.iteritems() if len(u[TWEETS]) > MINIMUM_TWEETS}
+    return {k:u for k, u in users.items() if len(u[TWEETS]) > MINIMUM_TWEETS}
 
 
 def get_base_vec(twts):
@@ -128,7 +148,7 @@ def get_base_vec(twts):
 
 
 def calc_distance_from_base(f_users, base_vec):
-    for user, data in f_users.iteritems():
+    for user, data in f_users.items():
         dist_from_base = eucleadean_dist(base_vec, data[CENTROID])
         f_users[user][DIST_FROM_BASE] = dist_from_base
 
@@ -146,7 +166,7 @@ def calc_distance_from_base(f_users, base_vec):
 if __name__ == '__main__':
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("Started at %s\n" %(time))
-    twts = pickle.load( open( twts_pkl_file, "rb" ) )
+    twts = pickle.load( open( twts_pkl_file, "rb" ), encoding="latin1")
 
 
     users = map_to_users(twts)
@@ -155,17 +175,17 @@ if __name__ == '__main__':
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("finished loading tweets at %s\n" %(time))
     if "--input" in sys.argv:
-        w2v = pickle.load( open( tweet2vec.w2v_pkl_file, "rb" ) )
-        word_counts, total_tweets = pickle.load( open( tweet2vec.idf_pkl_file, "rb" ) )
+        w2v = pickle.load(open(tweet2vec.w2v_pkl_file, "rb") , encoding="latin1")
+        word_counts, total_tweets = pickle.load(open(tweet2vec.idf_pkl_file, "rb"), encoding="latin1")
         time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print("finished loading model at %s\n" %(time))
         stop = False
         while not stop:
-            density_f = raw_input('Enter weight for density([0-1]): ')
+            density_f = input('Enter weight for density([0-1]): ')
             DENSITY_FACTOR = float(density_f)
-            sim_f = raw_input('Enter weight for similarity to sentence([0-1]): ')
+            sim_f = input('Enter weight for similarity to sentence([0-1]): ')
             BASE_DIST_FACTOR = float(sim_f)
-            nb = raw_input('Enter line: ')
+            nb = input('Enter line: ')
             if nb == "-1":
                 stop = True
             else:

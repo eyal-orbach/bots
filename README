@@ -1,8 +1,8 @@
 
-python 2.7
+python 3.6
 
 ############
-March 12 2019
+March 28 2019
 
 Currently this is a command line process with interaction via the console.
 This has not yet been optimized for performance and loads all data to memory.

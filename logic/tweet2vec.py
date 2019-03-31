@@ -1,10 +1,11 @@
 import datetime
-import numpy as np
 import pickle
 import sys
 
-import yoav_tokenizer
-from data_parser import TYPES
+import numpy as np
+
+from tools.data_parser import TYPES
+from utils import yoav_tokenizer
 
 INPUT_ARG = "--input"
 
@@ -18,12 +19,12 @@ TWEET = "tweet"
 
 VECTOR = "vector"
 
-w2v_pkl_file = "w2v.pkl"
-idf_pkl_file = "tf_idf.pkl"
+# w2v_pkl_file = "data/w2v.pkl"
+# idf_pkl_file = "data/tf_idf.pkl"
 
 
-# w2v_pkl_file = "w2v.sml.pkl"
-# idf_pkl_file = "tfidf.sml.pkl"
+w2v_pkl_file = "data/w2v.sml.pkl"
+idf_pkl_file = "data/tfidf.sml.pkl"
 
 def get_vec(tweet, w2v, word_counts, total_tweets):
     tokenized = [(type, tok) for (type, tok) in yoav_tokenizer.tokenize(tweet)]
@@ -67,8 +68,8 @@ def load_twts(twts_file):
 if __name__ == '__main__':
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("started at %s\n" %(time))
-    w2v = pickle.load( open( w2v_pkl_file, "rb" ) )
-    word_counts, total_tweets = pickle.load( open( idf_pkl_file, "rb" ) )
+    w2v = pickle.load( open( w2v_pkl_file, "rb" ) , encoding="latin1")
+    word_counts, total_tweets = pickle.load( open( idf_pkl_file, "rb" ), encoding="latin1" )
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("finished loading at %s\n" %(time))
 
@@ -82,7 +83,7 @@ if __name__ == '__main__':
         arg_index = sys.argv.index(INPUT_ARG)
         stop = False
         while not stop:
-            nb = raw_input('enter sentence: ')
+            nb = input('enter sentence: ')
             if nb == "-1":
                 stop = True
             else:
