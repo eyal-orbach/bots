@@ -1,0 +1,22 @@
+
+<div id=settingsContainer fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px" >
+<label>Enter cutoff numbe  for the list of returned users</label>
+<input mdInput type="number" id="k_userInput" [value]="k_users" (change)="k_users=$event.target.value">
+
+<label>Enter origin text to which user's centroid should be close too <br>(a senetence which you expect the users' tweets to be similar to)</label>
+<div id="textbox-container" fxLayout="row" fxFlex=60px>
+<textarea matInput placeholder="Origin text" [value]="originText" (change)="doTextareaValueChange($event)" fxFlex = 75%>
+  ביבי מבטיח נאום "חד כתער" באסיפה הכללית מחר. מה יהיה שם? איראן? טרור?? צדקת דרכנו??? שואה???? שרה והשגריר המיקרונזי לא
+  יכולים לחכות.
+</textarea>
+</div>
+
+<div id="slider-container" fxLayout="row">
+  <label>density of tweets</label>
+  <mat-slider min="0" max="1" step="0.001" [value]="subjectProximity" fxFlex=200px (change)="subjectProximity=$event.value"></mat-slider>
+  <label>similarity to origin</label>
+</div>
+<div id="button-container" fxLayout="row"  fxLayoutGap="10px">
+  <button mat-raised-button color="primary" id="show-results-button" (click)="showResults()">Show results</button>
+</div>
+</div>
