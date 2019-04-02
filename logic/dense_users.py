@@ -10,6 +10,7 @@ import numpy as np
 
 import logic.tweet2vec as tweet2vec
 from logic.tweet2vec import eucleadean_dist
+from data.data_location_helper import data_dir
 
 BASE_TWEET = 64544 #69685
 
@@ -29,7 +30,7 @@ LAMBDA_DIST = 1
 
 TWEETS = "tweets"
 
-twts_pkl_file = "data/twts.pkl"
+twts_pkl_file = data_dir + "/twts.pkl"
 
 output_file = "dense.out"
 
@@ -161,6 +162,33 @@ def calc_distance_from_base(f_users, base_vec):
 # similarity weight 0.8
 # sentence: "ביבי מבטיח נאום "חד כתער" באסיפה הכללית מחר. מה יהיה שם? איראן? טרור?? צדקת דרכנו??? שואה???? שרה והשגריר המיקרונזי לא יכולים לחכות."
 #
+
+
+#todo refactor to db
+def get_dense_users(k_users, proximity, density, text):
+
+    ####### data pre-process
+    twts = pickle.load( open( twts_pkl_file, "rb" ), encoding="latin1")
+    users = map_to_users(twts)
+    f_users = filter_users(users)
+    d_users = calc_density(f_users)
+    w2v = pickle.load(open(tweet2vec.w2v_pkl_file, "rb") , encoding="latin1")
+    word_counts, total_tweets = pickle.load(open(tweet2vec.idf_pkl_file, "rb"), encoding="latin1")
+    base_vec = tweet2vec.get_vec(text, w2v, word_counts, total_tweets)
+    final_users = calc_distance_from_base(d_users, base_vec)
+    top_k_users = get_top_k(final_users, k_users)
+
+    clean_results = []
+    for tup in top_k_users:
+        clean_tweets = []
+        for tweetObj in tup[1][TWEETS]:
+            clean_obj = {}
+            clean_obj[tweet2vec.DETAILS] = tweetObj[tweet2vec.DETAILS]
+            clean_obj[tweet2vec.TWEET] = tweetObj[tweet2vec.TWEET]
+            clean_tweets.append(clean_obj)
+
+        clean_results.append({"user": tup[0], "tweets": clean_tweets })
+    return clean_results
 
 
 if __name__ == '__main__':

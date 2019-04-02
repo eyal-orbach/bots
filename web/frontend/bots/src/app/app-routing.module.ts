@@ -6,6 +6,7 @@ import { TweetSimilarityComponent } from './tweet-similarity/tweet-similarity.co
 import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
+  { path: '', component: HomeComponent, data: { title: 'Home' } },
   { path: 'home', component: HomeComponent, data: { title: 'Home' } },
   { path: 'density', component: SubjectDensityComponent, data: { title: 'Subject Density' } },
   { path: 'behaviour', component: BehaviourSimilarityComponent, data: { title: 'Behaviour Similarity' } },
