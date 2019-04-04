@@ -1,0 +1,37 @@
+
+
+Table words
+word varchar(100) primary_key
+idf int
+vec array
+
+Table metadata
+param varchar(100)
+val varchar(100)
+
+
+Table tweets
+idx int primary_key
+tweetid bigint (index)
+tweet text
+time date
+user_id bigint (index)
+
+Table user
+idx int primary key
+user_id bigint
+name var(50)
+density int
+tweets_num int
+
+
+numpy nmap
+w2v: idx vector
+tweets: idx vector
+users: idx centroid_vector
+users: idx density
+
+
+
+consider normalizing both
+

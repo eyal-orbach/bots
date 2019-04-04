@@ -10,7 +10,7 @@ import numpy as np
 
 import logic.tweet2vec as tweet2vec
 from logic.tweet2vec import eucleadean_dist
-from data.data_location_helper import data_dir
+from config.config import data_files_dir as data_dir
 
 BASE_TWEET = 64544 #69685
 
