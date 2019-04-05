@@ -1,6 +1,11 @@
 
 python 3.6
 
+packages:
+numpy
+peewee
+bottle
+
 ############
 March 28 2019
 
