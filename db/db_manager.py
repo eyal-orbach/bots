@@ -3,12 +3,12 @@ import sqlite3
 from sqlite3 import Error
 import numpy as np
 import io
+from peewee import *
 
 
-METADATA_TABLE = """metadata"""
-WORD_EMBEDDINGS_TABLE = """word_embeddings"""
+db = SqliteDatabase(conf.sqlite_db_file)
 
-
+######helper functions#########
 def adapt_array(arr):
     """
     http://stackoverflow.com/a/31312102/190597 (SoulNibbler)
@@ -23,21 +23,55 @@ def convert_array(text):
     out.seek(0)
     return np.load(out)
 
-# Converts np.array to TEXT when inserting
-sqlite3.register_adapter(np.ndarray, adapt_array)
+def adaptnp(obj):
+    if type(obj) is np.ndarray:
+        return adapt_array(obj)
+    else:
+        return convert_array(obj)
 
-# Converts TEXT to np.array when selecting
-sqlite3.register_converter("array", convert_array)
+######Tables#########
+class Embedding(Model):
+    word = CharField(primary_key=True)
+    idf = IntegerField()
+    vec = BareField(adapt=adaptnp)
 
-def create_connection(db_file):
-    """ create a database connection to a SQLite database """
-    print(db_file)
-    try:
-        conn = sqlite3.connect(db_file, detect_types=sqlite3.PARSE_DECLTYPES)
-        print(sqlite3.version)
-        return conn
-    except Error as e:
-        print(e)
+    def save(self):
+        super(Embedding, self).save(force_insert=True)
 
+    class Meta:
+        database = db
 
-tweeter_db_connection = create_connection(conf.sqlite_db_file)
+class App_metadata(Model):
+    app_param = CharField(primary_key=True)
+    param_val = CharField()
+
+    def save(self):
+        super(App_metadata, self).save(force_insert=True)
+    class Meta:
+        database = db
+
+class Tweet(Model):
+    idx = BigIntegerField(primary_key=True)
+    tweetid = BigIntegerField()
+    userid = BigIntegerField(index=True)
+    msg = TextField()
+    vec = BareField(adapt=adaptnp)
+    time = DateTimeField(index=True)
+
+    def save(self):
+        super(Tweet, self).save(force_insert=True)
+    class Meta:
+        database = db
+
+class User(Model):
+    idx = IntegerField(primary_key=True)
+    userid = BigIntegerField(index=True)
+    name = CharField()
+    tweetsnum = IntegerField(null=True)
+    density = FloatField(null=True)
+    centroid = BareField(adapt=adaptnp, null=True)
+
+    def save(self):
+        super(User, self).save(force_insert=True)
+    class Meta:
+        database = db

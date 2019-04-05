@@ -1,6 +1,6 @@
 
 
-Table words
+Table word_embedding
 word varchar(100) primary_key
 idf int
 vec array
@@ -19,7 +19,7 @@ user_id bigint (index)
 
 Table user
 idx int primary key
-user_id bigint
+user_id bigint (index)
 name var(50)
 density int
 tweets_num int
@@ -35,3 +35,9 @@ users: idx density
 
 consider normalizing both
 
+
+
+setup:
+load_embeddings
+load_tweets
+produce_centroids

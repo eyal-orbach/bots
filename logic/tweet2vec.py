@@ -1,7 +1,6 @@
-import numpy as np
 import utils.yoav_tokenizer as yoav_tokenizer
 from tools.data_parser import TYPES
-import db.db_manager as dbm
+from db.db_manager import *
 from tools.embeddings_loader import IDF_TWEETS_COUNT as IDF_TWEETS_COUNT
 
 
@@ -18,19 +17,26 @@ class Tweet2Vec:
     word_embeddings_cache = {}
 
     def __init__(self):
-        self.total_tweets = self.get_total_tweets()
+        self.total_tweets = App_metadata.get_or_none(app_param=IDF_TWEETS_COUNT).param_val
 
     def get_vec(self, tweet):
         tokenized = [(type, tok) for (type, tok) in yoav_tokenizer.tokenize(tweet)]
         tweet_vec = np.zeros(100)
         terms = {}
         for (type, tok) in tokenized:
-            if type in TYPES and tok in w2v:
-                if tok in terms:
-                    terms[tok]["tf"] += 1
-                else:
-                    idf = np.log(float(total_tweets)/float(word_counts[tok]))
-                    terms[tok] = {"tf": 1, "vec": np.array(w2v[tok]), "idf": idf}
+            if type in TYPES:
+                cached_tup = self.word_embeddings_cache.get(tok, None)
+                if cached_tup is None:
+                    emb = Embedding.get_or_none(word=tok)
+                    if emb is not None:
+                        cached_tup = (emb.idf, emb.vec)
+                        self.word_embeddings_cache[tok] = cached_tup
+                if cached_tup is not None:
+                    if tok in terms:
+                        terms[tok]["tf"] += 1
+                    else:
+                        idf = np.log(float(self.total_tweets)/float(cached_tup[0]))
+                        terms[tok] = {"tf": 1, "vec": cached_tup[1], "idf": idf}
 
         for term in terms.values():
             tfidf = term["tf"] * term["idf"]
@@ -39,9 +45,7 @@ class Tweet2Vec:
 
         return tweet_vec
 
-    def get_idf_total_tweets(self):
-        c = dbm.tweeter_db_connection.cursor()
-        c.execute('select val from %s where param ="%s"', dbm.METADATA_TABLE, IDF_TWEETS_COUNT)
+instance = Tweet2Vec()
 
 
 
