@@ -8,7 +8,7 @@ PRINT_EVERY_I_ITERATION = 1
 
 def load_twts(twts_file):
     tweet_vecs = []
-    with open(twts_file) as f:
+    with open(twts_file, "rb") as f:
         content = f.readlines()
         i=0
         tweet_counter = 0
@@ -18,12 +18,12 @@ def load_twts(twts_file):
             if i % PRINT_EVERY_I_ITERATION == 0:
                 print("reading line %d" % i)
             arr = line.split()
-            user_name = arr[0]
+            user_name = arr[0].decode(encoding="utf_8", errors="ignore")
             details = arr[1:4]
             user_id = int(details[0])
             tweet_time = datetime.datetime.fromtimestamp(float(details[1]))
             tweet_id = int(details[2])
-            tweet_msg = " ".join(arr[4:])
+            tweet_msg = " ".join([x.decode(encoding="utf_8", errors="ignore") for x in arr[4:]])
             vector = t2v.instance.get_vec(tweet_msg)
 
             Tweet(idx=tweet_counter, tweetid=tweet_id, userid=user_id, msg=tweet_msg, vec=vector, time=tweet_time).save()

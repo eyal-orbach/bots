@@ -1,5 +1,5 @@
 import time
-from bottle import route, run, template
+from bottle import route, run, template, request
 
 memdict={}
 
@@ -11,8 +11,11 @@ def load_dict():
 
 
 
-@route('/hello/<name>')
-def index(name):
+@route('/bots.api/subject-density')
+def subj_density(name):
+    data = request.json()
+
+
     word = memdict.get(name, "not found")
     time.sleep(10)
     return template('<b>Hello {{name}}</b>!', name=word)
@@ -20,4 +23,4 @@ def index(name):
 
 if __name__ == '__main__':
     load_dict()
-    run(host='localhost', port=8080)
+    run(host='localhost', port=8000)

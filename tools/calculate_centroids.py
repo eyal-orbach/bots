@@ -1,4 +1,4 @@
-
+import datetime
 from db.db_manager import *
 
 PRINT_EVERY_I_ITERATION = 1
@@ -35,9 +35,15 @@ def calc_for_users():
             print("calculating user %d" % i)
         calc_density(i)
 
-    np.save(conf.data_files_dir+"/user_centroids.npy", np.array(user_centroids))
-    np.save(conf.data_files_dir+"/user_densitys.npy", np.array(user_densitys))
+    np.save(conf.centroids_file, np.array(user_centroids))
+    np.save(conf.denstitys_file, np.array(user_densitys))
 
 
 if __name__ == '__main__':
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print("started  at %s\n" %(time))
+
     calc_for_users()
+
+    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print("done at %s\n" %(time))
