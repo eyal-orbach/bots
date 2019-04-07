@@ -1,6 +1,6 @@
 import time
 import json
-from bottle import route, run, get, post, request, HTTPResponse
+from bottle import route, run, get, post, request, HTTPResponse ,hook, response, error
 from logic import api
 import numpy as np
 import config.config as conf
@@ -8,8 +8,7 @@ import config.config as conf
 centroids = np.load(conf.centroids_file)
 densitys = np.load(conf.denstitys_file)
 
-
-@post('/bots/api/subject-density')
+@route('/bots/api/subjectdensity', method=['POST'])
 def subj_density():
     r = request
     data = r.json

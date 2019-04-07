@@ -4,12 +4,11 @@ import { HttpHeaders } from '@angular/common/http';
 
 const httpOptions = {
   headers: new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Authorization': 'my-auth-token'
+    'Content-Type': 'application/json'
   })
 };
 
-var backend_domain = "localhost:8000"
+var backend_domain = "localhost:4200"
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +22,7 @@ export class HebrewBotsServiceService {
    }
 
   getSubjectDensityList(settingJson:string, updateResultsCallback) {
-    this.httpClient.post("http://" + backend_domain + '/bots/api/subject-density', settingJson, httpOptions).subscribe(data => {
+    this.httpClient.post('/bots/api/subjectdensity', settingJson, httpOptions).subscribe(data => {
       console.log(data);
       updateResultsCallback(data);
     });

@@ -8,6 +8,10 @@ user_centroids = []
 user_densitys = []
 
 def calc_density(i):
+
+    #todo zerofy users with less than 5 tweets
+
+
     user = User.get(idx=i)
     user_tweets = Tweet.select().where(Tweet.userid == user.userid)
     sum = np.zeros((100,))
