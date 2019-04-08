@@ -42,3 +42,42 @@
     overflow-x: hidden;
     height: 50%;
 }
+
+a.username{
+    padding: 3px;
+    margin-left: 20px;
+    margin-top: 2px; 
+}
+
+a.await-results{
+    color: #89959c;
+    margin-left: -150px;
+    text-align: center;
+    width: 300px;
+    position: relative;
+    left: 50%;
+    top: 20%;
+}
+
+a.load-results{
+    margin-left: -150px;
+    text-align: center;
+    width: 300px;
+    position: relative;
+    left: 50%;
+    top: 20%;
+    animation: blink 1s linear infinite;
+}
+@keyframes blink{
+0%{opacity: 0;  color:#638ba1; }
+50%{opacity: .5; color:#638ba1;}
+80%{opacity: 1; color: #638ba1;}
+100%{opacity: 0.5; color: #638ba1;}
+
+}
+
+
+a.results-loaded{
+    display: none;
+}
+

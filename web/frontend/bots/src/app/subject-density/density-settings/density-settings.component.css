@@ -6,7 +6,16 @@
     padding-left: 10px;
 }
 
+a.toollabel{
+    color: #5893b7;
+    padding-top: 13px;
+    vertical-align: bottom;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
 #show-results-button{
-background-color: #1ca1f2;
-left: 30px;
+    background-color: #1ca1f2;
+    left: 10px;
+
 }
