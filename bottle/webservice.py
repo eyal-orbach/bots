@@ -1,6 +1,6 @@
 import numpy as np
 from bottle import route, run, request, HTTPResponse
-from bottle import static_file
+from bottle import static_file, template
 
 import config.config as conf
 from logic import api
@@ -19,6 +19,10 @@ def subj_density():
 @route('/static/<filename:path>')
 def send_static(filename):
     return static_file(filename, root=conf.static_files)
+
+@route('/index', method=['GET'])
+def startapp():
+    return template("index.html")
 
 if __name__ == '__main__':
 
