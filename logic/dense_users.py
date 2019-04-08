@@ -1,7 +1,12 @@
 from logic import tweet2vec
 import config.config as conf
 import numpy as np
+import requests
 from db.db_manager import *
+
+MIN_TWEETS = 1
+
+TWITTER_STATUS_URL="https://twitter.com/tweeter/status/"
 
 class density_request_obj:
     def __init__(self, k_users, proximity, density, text):
@@ -16,14 +21,17 @@ def get_dense_users(request_obj:density_request_obj, centroids, densitys):
     counter = 0
     for index in sorted_user_indices:
         dbuser = User.get(idx=index)
-        if dbuser.tweetsnum < 5:
+        if dbuser.tweetsnum < MIN_TWEETS:
             continue
 
         user_dict={"name": dbuser.name, "tweeter_id":dbuser.userid}
         db_all_tweets = Tweet.select().where(Tweet.userid==dbuser.userid)
         user_tweets = []
         for db_tweet in db_all_tweets:
-            tweet = {"tweetid": db_tweet.tweetid, "msg":db_tweet.msg, "time":db_tweet.time}
+            # if requests.head(TWITTER_STATUS_URL+str(db_tweet.tweetid)).status_code == 404:
+            #     tweet = {"tweetid": db_tweet.tweetid, "msg":db_tweet.msg, "time":db_tweet.time, "removed":True}
+            # else:
+            tweet = {"tweetid": db_tweet.tweetid, "msg":db_tweet.msg, "time":db_tweet.time, "removed":False}
             user_tweets.append(tweet)
         user_dict["tweets"] = user_tweets
         final_users.append(user_dict)

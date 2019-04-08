@@ -1,9 +1,9 @@
-import time
-import json
-from bottle import route, run, get, post, request, HTTPResponse ,hook, response, error
-from logic import api
 import numpy as np
+from bottle import route, run, request, HTTPResponse
+from bottle import static_file
+
 import config.config as conf
+from logic import api
 
 centroids = np.load(conf.centroids_file)
 densitys = np.load(conf.denstitys_file)
@@ -14,6 +14,11 @@ def subj_density():
     data = r.json
     results = api.subject_density(data, centroids, densitys)
     return HTTPResponse(code=200, body=results)
+
+
+@route('/static/<filename:path>')
+def send_static(filename):
+    return static_file(filename, root=conf.static_files)
 
 if __name__ == '__main__':
 

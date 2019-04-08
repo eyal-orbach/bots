@@ -1,0 +1,17 @@
+mat-sidenav-container {
+  width: 100% !important;
+  height: calc(100vh - 64px) !important;
+}
+  
+div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 4000px;
+}
+
+mat-toolbar {
+  height: 64px;
+  position: relative;
+  z-index: 100;
+}
