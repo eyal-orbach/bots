@@ -1,8 +1,5 @@
-from logic import tweet2vec
-import config.config as conf
-import numpy as np
-import requests
 from db.db_manager import *
+from logic import tweet2vec
 
 MIN_TWEETS = 1
 
