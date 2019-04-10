@@ -16,6 +16,20 @@ a.toollabel{
 
 #show-results-button{
     background-color: #1ca1f2;
-    left: 10px;
+    left: 50%;
+    margin-left: -60px;
+    top: 80%;
+}
 
+#k_userInput{
+    margin-left: 20px;
+    width: 40px;
+}
+
+#textbox-container{
+    margin-left: 20px;
+}
+
+label.settings-container1{
+    margin-left: 20px;
 }

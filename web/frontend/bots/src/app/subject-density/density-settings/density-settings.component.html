@@ -1,15 +1,18 @@
 
-<div id=settingsContainer fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px" >
-<label>Enter cutoff number  for the list of returned users</label>
+<div id=settingsBoxContainer fxLayout="row"  fxLayoutGap=10%>
+<div id=settingsContainer1 fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px"  >
+<label class="settings-container1">Enter cutoff number  for the list of returned users</label>
 <input mdInput type="number" id="k_userInput" [value]="k_users" (change)="k_users=$event.target.value">
 
-<label>Enter origin text to which user's tweets should be similar to <br>(notice sentiments are not taken into consideration, only topical relations)</label>
+<label class="settings-container1">Enter origin text to which user's tweets should be similar to <br>(notice sentiments are not taken into consideration, only topical relations)</label>
 <div id="textbox-container" fxLayout="row" fxFlex=60px>
-<textarea matInput placeholder="Origin text" [value]="originText" (change)="doTextareaValueChange($event)" fxFlex = 75%>
+<textarea matInput placeholder="Origin text" [value]="originText" (change)="doTextareaValueChange($event)" fxFlex = 90%>
   ביבי מבטיח נאום "חד כתער" באסיפה הכללית מחר. מה יהיה שם? איראן? טרור?? צדקת דרכנו??? שואה???? שרה והשגריר המיקרונזי לא
   יכולים לחכות.
 </textarea>
 </div>
+</div>
+<div id=settingsContainer2 fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px" >
 <label>select  what should recive more weight <br>(tweets density vs proximity to the sentence entered)</label>
 <div id="slider-container" fxLayout="row">
   <a class="toollabel">density of tweets</a>
@@ -18,5 +21,6 @@
 </div>
 <div id="button-container" fxLayout="row"  fxLayoutGap="10px">
   <button mat-raised-button color="primary" id="show-results-button" (click)="showResults()">Show results</button>
+</div>
 </div>
 </div>
