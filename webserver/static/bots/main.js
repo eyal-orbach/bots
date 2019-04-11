@@ -306,6 +306,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+
 
 
 
@@ -317,12 +319,13 @@ var httpOptions = {
 };
 var backend_domain = "localhost:4200";
 var HebrewBotsServiceService = /** @class */ (function () {
-    function HebrewBotsServiceService(http) {
+    function HebrewBotsServiceService(http, location) {
         this.http = http;
+        this.location = location;
         this.httpClient = http;
     }
     HebrewBotsServiceService.prototype.getSubjectDensityList = function (settingJson, updateResultsCallback) {
-        this.httpClient.post('/bots/api/subjectdensity', settingJson, httpOptions).subscribe(function (data) {
+        this.httpClient.post(this.location.prepareExternalUrl('/bots/api/subjectdensity'), settingJson, httpOptions).subscribe(function (data) {
             console.log(data);
             updateResultsCallback(data);
         });
@@ -331,7 +334,7 @@ var HebrewBotsServiceService = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"], _angular_common__WEBPACK_IMPORTED_MODULE_3__["Location"]])
     ], HebrewBotsServiceService);
     return HebrewBotsServiceService;
 }());
