@@ -5,6 +5,10 @@ import numpy as np
 
 from logic import dense_users
 
+
+#todo change logic to average between min distance from every tweet of origin user to any tweet of target user
+
+
 AMOUNT_OF_TWEETS_FACTOR = 2
 
 DIST = "dist"
