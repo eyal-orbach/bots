@@ -10,6 +10,12 @@
   <div id="preloaded_tweet" style="display:hidden">
     <ngx-tweet tweetId="1110423138570067968" style="display:none"></ngx-tweet>
   </div>
+    <section class="example-section">
+      Text
+      <mat-slide-toggle class="example-margin" [color]="color" [checked]="embeddTweets" (change)="embeddTweets = !embeddTweets" [disabled]="disabled">
+        Embedded tweets
+      </mat-slide-toggle>
+    </section>
   <div class="results_container">
     <a [class]="resultsPlaceHolderStyle">results will show here</a>
     <ng-container *ngFor="let user of tweetsJson">
@@ -18,8 +24,11 @@
           <a href="http://twitter.com/{{user.name}}" class="username"> {{user.name}} </a>
         </div>
         <div *ngFor="let tweet of user.tweets">
-          <div class="tweetcontainer">
+          <div class="tweetcontainer" *ngIf="embeddTweets">
             <ngx-tweet tweetId={{tweet.tweetid}}></ngx-tweet>
+          </div>
+          <div class="tweetcontainer" *ngIf="!embeddTweets">
+            <a href="http://twitter.com/user/status/{{tweet.tweetid}}">{{tweet.msg}}</a>
           </div>
         </div>
         <hr class="tweetseperator">

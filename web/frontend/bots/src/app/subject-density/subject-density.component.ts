@@ -13,8 +13,9 @@ import { DOCUMENT } from '@angular/platform-browser';
 })
 export class SubjectDensityComponent implements OnInit {
   botService: HebrewBotsServiceService;
-  tweetsJson: object
-  resultsPlaceHolderStyle:string="await-results"
+  tweetsJson: object;
+  resultsPlaceHolderStyle:string="await-results";
+  embeddTweets:Boolean = false;
 
   constructor(botsService: HebrewBotsServiceService, private renderer2: Renderer2, @Inject(DOCUMENT) private _document) { 
     this.botService = botsService;

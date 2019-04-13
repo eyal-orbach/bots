@@ -15,6 +15,9 @@ def subj_density():
     results = api.subject_density(data, centroids, densitys)
     return HTTPResponse(code=200, body=results)
 
+@route('/index', method=['GET'])
+def startapp():
+    return template("/bots/index.html")
 
 @route('/static/<filename:path>')
 def send_static(filename):
