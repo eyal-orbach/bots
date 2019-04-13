@@ -17,18 +17,16 @@ def subj_density():
 
 @route('/index', method=['GET'])
 def startapp():
-    return template("/bots/index.html")
+    return static_file("bots/index.html", root=conf.static_files)
 
 @route('/static/<filename:path>')
 def send_static(filename):
     return static_file(filename, root=conf.static_files)
 
-@route('/index', method=['GET'])
-def startapp():
-    return template("index.html")
+
 
 @route('/test', method=['GET'])
-def startapp():
+def testapp():
     return template('<b>Hello {{name}}</b>!', name="eyal")
 
 if __name__ == '__main__':
