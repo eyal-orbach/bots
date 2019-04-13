@@ -1,7 +1,7 @@
 from db.db_manager import *
 from logic import tweet2vec
 
-MIN_TWEETS = 1
+MIN_TWEETS = 5
 
 TWITTER_STATUS_URL="https://twitter.com/tweeter/status/"
 
@@ -35,6 +35,7 @@ def get_dense_users(request_obj:density_request_obj, centroids, densitys):
         counter+=1
         if counter >= request_obj.k_users:
             return final_users
+
     return final_users
 
 
