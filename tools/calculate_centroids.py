@@ -1,4 +1,5 @@
 import datetime
+import logging
 from db.db_manager import *
 
 PRINT_EVERY_I_ITERATION = 1
@@ -35,13 +36,17 @@ def cosine_dist(vec_a, vec_b):
 
 def get_variance(vecs, centroid, dist_func):
     sum_dist = 0
+    c = 0
     for vec in vecs:
         sum_dist += dist_func(vec, centroid)
+        c += 1
+        logging.debug("calc variance via tweet %d" % c)
     return sum_dist/float(len(vecs))
 
 def calc_cosine_density(i):
     user = User.get(idx=i)
     user_tweets = Tweet.select().where(Tweet.userid == user.userid)
+    logging.debug("tweets: %d" % (len(user_tweets)))
     cosine_centroid = np.zeros((100,))
     count = 0
     normalized_twts = []
@@ -51,6 +56,8 @@ def calc_cosine_density(i):
         normalized_vec = twt.vec / vec_magnitude
         normalized_twts.append(normalized_vec)
         cosine_centroid += normalized_vec
+        logging.debug("calc centroid via tweet %d" % count)
+
     cosine_centroid /= float(count)
     user_cosine_centroids.append(cosine_centroid)
     avg = get_variance([t.vec for t in user_tweets], cosine_centroid, cosine_dist)
@@ -68,8 +75,10 @@ def append_cosine_density_from_euc_centroid(i):
 
 
 def calc_for_users():
+    logging.debug("started")
     maxidx = User.select(fn.max(User.idx)).scalar()
     for i in range(maxidx):
+        logging.debug("calculating user %d" % i)
         if i % PRINT_EVERY_I_ITERATION == 0:
             print("calculating user %d" % i)
         # calc_euclidean_density(i)
