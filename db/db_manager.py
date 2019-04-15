@@ -69,9 +69,22 @@ class User(Model):
     name = CharField()
     tweetsnum = IntegerField(null=True)
     density = FloatField(null=True)
+    cosine_density = FloatField(null=True)
     centroid = BareField(adapt=adaptnp, null=True)
 
     def save(self):
         super(User, self).save(force_insert=True)
+    class Meta:
+        database = db
+
+
+class Cosinecentroid(Model):
+    idx = IntegerField(primary_key=True)
+    userid = BigIntegerField(index=True)
+    cos_density = FloatField(null=True)
+    cos_centroid = BareField(adapt=adaptnp, null=True)
+
+    def save(self):
+        super(Cosinecentroid, self).save(force_insert=True)
     class Meta:
         database = db

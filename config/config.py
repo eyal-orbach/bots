@@ -13,4 +13,6 @@ idf_pkl_file = data_files_dir + "/tf_idf.pkl"
 
 denstitys_file = data_files_dir+"/user_densitys.npy"
 centroids_file = data_files_dir+"/user_centroids.npy"
-
+cosine_centroids_file = data_files_dir+"/user_cosine_centroids.npy"
+cosine_densitys_to_euc_file = data_files_dir+"/user_cosine_densitys_to_euc.npy"
+cosine_densitys = data_files_dir+"/user_cosine_densitys.npy"
