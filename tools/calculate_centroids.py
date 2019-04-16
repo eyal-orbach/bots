@@ -61,7 +61,7 @@ def calc_cosine_density(i):
     cosine_centroid /= float(count)
     user_cosine_centroids.append(cosine_centroid)
     avg = get_variance([t.vec for t in user_tweets], cosine_centroid, cosine_dist)
-    user_eucledean_densitys.append(avg)
+    user_cosine_densitys_to_cosine_centroid.append(avg)
     Cosinecentroid.insert(idx=i, userid=user.userid, cos_centroid=cosine_centroid, cos_density=avg).execute()
 
 
@@ -81,9 +81,9 @@ def calc_for_users():
         logging.debug("calculating user %d" % i)
         if i % PRINT_EVERY_I_ITERATION == 0:
             print("calculating user %d" % i)
-        # calc_euclidean_density(i)
+        calc_euclidean_density(i)
         calc_cosine_density(i)
-        append_cosine_density_from_euc_centroid(i)
+
 
     np.save(conf.centroids_file, np.array(user_eucleadean_centroids))
     np.save(conf.denstitys_file, np.array(user_eucledean_densitys))
