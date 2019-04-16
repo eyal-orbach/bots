@@ -13,6 +13,7 @@ import { DensitySettingsComponent } from './subject-density/density-settings/den
 import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ResultsContainerComponent } from './results-container/results-container.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
     TweetSimilarityComponent,
     DensitySettingsComponent,
     HomeComponent,
+    ResultsContainerComponent,
   ],
   imports: [
     BrowserModule,

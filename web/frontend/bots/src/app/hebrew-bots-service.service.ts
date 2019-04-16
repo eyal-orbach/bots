@@ -9,7 +9,8 @@ const httpOptions = {
   })
 };
 
-var backend_domain = "localhost:4200"
+
+var subject_density_api = '/bots/api/subjectdensity'
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,8 @@ export class HebrewBotsServiceService {
    }
 
   getSubjectDensityList(settingJson:string, updateResultsCallback) {
-    this.httpClient.post(this.location.prepareExternalUrl('/bots/api/subjectdensity'), settingJson, httpOptions).subscribe(data => {
+    var url = this.location.prepareExternalUrl(subject_density_api);
+    this.httpClient.post(url, settingJson, httpOptions).subscribe(data => {
       console.log(data);
       updateResultsCallback(data);
     });

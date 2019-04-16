@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HebrewBotsServiceService } from '../hebrew-bots-service.service';
+import { ResultsContainerComponent, RESULTS_STATE} from '../results-container/results-container.component'
 
 import { Renderer2, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/platform-browser';
@@ -13,12 +14,12 @@ import { DOCUMENT } from '@angular/platform-browser';
 })
 export class SubjectDensityComponent implements OnInit {
   botService: HebrewBotsServiceService;
-  tweetsJson: object;
-  resultsPlaceHolderStyle:string="await-results";
-  embeddTweets:Boolean = false;
+  resultsJson: object;
+  resultsState: string;
 
   constructor(botsService: HebrewBotsServiceService, private renderer2: Renderer2, @Inject(DOCUMENT) private _document) { 
     this.botService = botsService;
+    this.resultsState = RESULTS_STATE.WAITING
   }
 
   callbackClosure(i, callback) {
@@ -27,34 +28,19 @@ export class SubjectDensityComponent implements OnInit {
     }
   }
 
-  
   handleSettings(evt) {
-    this.resultsPlaceHolderStyle ="load-results";
-    this.tweetsJson = null;
+    this.resultsState = RESULTS_STATE.LOADING;
+    this.resultsJson = null;
     var setingsJson = JSON.stringify(evt) ;
-    this.botService.getSubjectDensityList(setingsJson, (i)=>{this.set_json(i)} );
+    this.botService.getSubjectDensityList(setingsJson, (r)=>{this.set_json(r)} );
   }
-
 
   set_json(json){
-    this.tweetsJson = json
-    this.resultsPlaceHolderStyle="results-loaded";
-  }
-
-  getCallback(){
-    var ref = this.tweetsJson
-  return function(dataJSON : object) {
-    ref = dataJSON;
-   }
+    this.resultsJson = json
+    this.resultsState = RESULTS_STATE.LOADED
   }
 
   ngOnInit() {
-    let r = Math.random().toString(36).substring(7);
-    const s = this.renderer2.createElement('script');
-    s.type = 'text/javascript';
-    s.src = "http://localhost:8000/static/widgets.js";
-    s.text = ``;
-    this.renderer2.appendChild(this._document.body, s);
   }
 
 }
