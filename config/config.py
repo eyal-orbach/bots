@@ -19,6 +19,7 @@ cosine_centroids_file = data_files_dir+"/user_cosine_centroids.npy"
 cosine_densitys_to_euc_file = data_files_dir+"/user_cosine_densitys_to_euc.npy"
 cosine_densitys = data_files_dir+"/user_cosine_densitys.npy"
 
+tweets_vecs_file = data_files_dir + "/twts_vecs.npy"
 
 #logging
 log_file = data_files_dir+"/app.log"

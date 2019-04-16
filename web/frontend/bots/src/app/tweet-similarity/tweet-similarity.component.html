@@ -1,3 +1,11 @@
-<p>
-  tweet-similarity works!
-</p>
+<div style="height:100%; overflow: hidden;">
+  <p id=info>
+    This is the tweet similarity module.<br>
+    Here you can search for tweets that are close to the given input sentence, in a specified time frame.
+  </p>
+  <hr>
+  <app-tweet-similarity-settings (resultsTrigger)=handleSettings($event) style="height:25%"></app-tweet-similarity-settings>
+  <br><br>
+  <hr>
+  <app-results-container [tweetsJson]="resultsJson" [resultsPlaceHolderStyle]="resultsState"></app-results-container>
+</div>

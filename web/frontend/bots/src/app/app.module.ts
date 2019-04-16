@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ResultsContainerComponent } from './results-container/results-container.component';
+import { TweetSimilaritySettingsComponent } from './tweet-similarity/tweet-similarity-settings/tweet-similarity-settings.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { ResultsContainerComponent } from './results-container/results-container
     DensitySettingsComponent,
     HomeComponent,
     ResultsContainerComponent,
+    TweetSimilaritySettingsComponent,
   ],
   imports: [
     BrowserModule,

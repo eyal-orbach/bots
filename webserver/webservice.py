@@ -8,12 +8,22 @@ from logic import api
 centroids = np.load(conf.centroids_file)
 densitys = np.load(conf.denstitys_file)
 
+api.init()
+
 @route('/bots/api/subjectdensity', method=['POST'])
 def subj_density():
     r = request
     data = r.json
     results = api.subject_density(data, centroids, densitys)
     return HTTPResponse(code=200, body=results)
+
+@route('/bots/api/tweetsimilarity', method=['POST'])
+def tweet_similarity():
+    r = request
+    data = r.json
+    results = api.tweet_similarity(data)
+    return HTTPResponse(code=200, body=results)
+
 
 @route('/index', method=['GET'])
 def startapp():

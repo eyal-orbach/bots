@@ -17,15 +17,9 @@ export class SubjectDensityComponent implements OnInit {
   resultsJson: object;
   resultsState: string;
 
-  constructor(botsService: HebrewBotsServiceService, private renderer2: Renderer2, @Inject(DOCUMENT) private _document) { 
+  constructor(botsService: HebrewBotsServiceService) { 
     this.botService = botsService;
     this.resultsState = RESULTS_STATE.WAITING
-  }
-
-  callbackClosure(i, callback) {
-    return function () {
-      return callback(i);
-    }
   }
 
   handleSettings(evt) {

@@ -44,7 +44,7 @@ def get_dense_users_indices(centroids, densitys, request_obj):
     centroids_minus_base = centroids - base_vec
     distances_from_base = np.linalg.norm(centroids_minus_base, axis=1)
     factored_array = (distances_from_base * request_obj.proximity_factor) + (densitys * request_obj.density_factor)
-    return np.flip(np.argsort(factored_array))
+    return iter(np.argsort(factored_array))
 
 
 

@@ -1,0 +1,19 @@
+<div id=settingsBoxContainer fxLayout="row" fxLayoutGap=10%>
+  <div id=settingsContainer1 fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px">
+    <label class="settings-container1">Enter cutoff number for the list of returned tweets</label>
+    <input mdInput type="number" id="kTweetSelector" [value]="kTweets" (change)="kTweets=$event.target.value">
+
+    <label class="settings-container1">Enter origin text to which tweets should be similar to <br>(notice
+      sentiments are not taken into consideration, only topical relations)</label>
+    <div id="textbox-container" fxLayout="row" fxFlex=60px>
+      <textarea matInput placeholder="Origin text" [value]="originText" (change)="doTextareaValueChange($event)"
+        fxFlex=90%>
+</textarea>
+    </div>
+  </div>
+  <div id=settingsContainer2 fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px">
+    <div id="button-container" fxLayout="row" fxLayoutGap="10px">
+      <button mat-raised-button color="primary" id="show-results-button" (click)="showResults()">Show results</button>
+    </div>
+  </div>
+</div>
