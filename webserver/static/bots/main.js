@@ -150,6 +150,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _home_home_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./home/home.component */ "./src/app/home/home.component.ts");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _results_container_results_container_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./results-container/results-container.component */ "./src/app/results-container/results-container.component.ts");
+/* harmony import */ var _tweet_similarity_tweet_similarity_settings_tweet_similarity_settings_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./tweet-similarity/tweet-similarity-settings/tweet-similarity-settings.component */ "./src/app/tweet-similarity/tweet-similarity-settings/tweet-similarity-settings.component.ts");
+
+
 
 
 
@@ -179,6 +183,8 @@ var AppModule = /** @class */ (function () {
                 _tweet_similarity_tweet_similarity_component__WEBPACK_IMPORTED_MODULE_10__["TweetSimilarityComponent"],
                 _subject_density_density_settings_density_settings_component__WEBPACK_IMPORTED_MODULE_12__["DensitySettingsComponent"],
                 _home_home_component__WEBPACK_IMPORTED_MODULE_14__["HomeComponent"],
+                _results_container_results_container_component__WEBPACK_IMPORTED_MODULE_16__["ResultsContainerComponent"],
+                _tweet_similarity_tweet_similarity_settings_tweet_similarity_settings_component__WEBPACK_IMPORTED_MODULE_17__["TweetSimilaritySettingsComponent"],
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
@@ -283,9 +289,9 @@ var CustomMaterialModule = /** @class */ (function () {
     CustomMaterialModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
             imports: [_angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatToolbarModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatNativeDateModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatIconModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSidenavModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatListModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSliderModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatInputModule"], ngx_tweet__WEBPACK_IMPORTED_MODULE_3__["NgxTweetModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSlideToggleModule"]],
+                _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatListModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSliderModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatInputModule"], ngx_tweet__WEBPACK_IMPORTED_MODULE_3__["NgxTweetModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSlideToggleModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatDatepickerModule"]],
             exports: [_angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatToolbarModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatNativeDateModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatIconModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSidenavModule"],
-                _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatListModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSliderModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatInputModule"], ngx_tweet__WEBPACK_IMPORTED_MODULE_3__["NgxTweetModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSlideToggleModule"]],
+                _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatListModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSliderModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatInputModule"], ngx_tweet__WEBPACK_IMPORTED_MODULE_3__["NgxTweetModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatSlideToggleModule"], _angular_material__WEBPACK_IMPORTED_MODULE_4__["MatDatepickerModule"]],
         })
     ], CustomMaterialModule);
     return CustomMaterialModule;
@@ -319,7 +325,8 @@ var httpOptions = {
         'Content-Type': 'application/json'
     })
 };
-var backend_domain = "localhost:4200";
+var subject_density_api = '/bots/api/subjectdensity';
+var tweet_similarity_api = '/bots/api/tweetsimilarity';
 var HebrewBotsServiceService = /** @class */ (function () {
     function HebrewBotsServiceService(http, location) {
         this.http = http;
@@ -327,7 +334,15 @@ var HebrewBotsServiceService = /** @class */ (function () {
         this.httpClient = http;
     }
     HebrewBotsServiceService.prototype.getSubjectDensityList = function (settingJson, updateResultsCallback) {
-        this.httpClient.post(this.location.prepareExternalUrl('/bots/api/subjectdensity'), settingJson, httpOptions).subscribe(function (data) {
+        var url = this.location.prepareExternalUrl(subject_density_api);
+        this.callApi(settingJson, updateResultsCallback, url);
+    };
+    HebrewBotsServiceService.prototype.getSimilarTweets = function (setingsJson, updateResultsCallback) {
+        var url = this.location.prepareExternalUrl(tweet_similarity_api);
+        this.callApi(setingsJson, updateResultsCallback, url);
+    };
+    HebrewBotsServiceService.prototype.callApi = function (settingJson, updateResultsCallback, url) {
+        this.httpClient.post(url, settingJson, httpOptions).subscribe(function (data) {
             console.log(data);
             updateResultsCallback(data);
         });
@@ -457,6 +472,77 @@ var NavigationComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/results-container/results-container.component.css":
+/*!*******************************************************************!*\
+  !*** ./src/app/results-container/results-container.component.css ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n.tweetcontainer{\n    top:2px;\n    padding: 3px;\n    text-align: right;\n    left: 20%;\n    position: relative;\n}\n\n.removed_label{\n    top: 40px;\n    position: relative;\n    left: 10px;\n    z-index: -100;\n}\n\n.userseperator{\n    height: 1px;\n    background: #333;\n    background-image: linear-gradient(to right, #ccc, #333, #ccc);\n}\n\n.usertweets{\n    border: 0;\n    border-bottom: 1px dashed #ccc;\n    background: #999;\n}\n\n.tweetseperator{\n    border: 0;\n    height: 1px;\n    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));\n}\n\n.results_container{\n    overflow-y: scroll;\n    overflow-x: hidden;\n    height: 75%;\n    padding-left: 20%;\n    padding-right: 20%;\n}\n\na.username{\n    padding: 3px;\n    margin-left: 20px;\n    margin-top: 2px; \n}\n\na.await-results{\n    color: #89959c;\n    margin-left: -150px;\n    text-align: center;\n    width: 300px;\n    position: relative;\n    left: 50%;\n    top: 20%;\n}\n\na.load-results{\n    margin-left: -150px;\n    text-align: center;\n    width: 300px;\n    position: relative;\n    left: 50%;\n    top: 20%;\n    -webkit-animation: blink 1s linear infinite;\n            animation: blink 1s linear infinite;\n}\n\n@-webkit-keyframes blink{\n0%{opacity: 0;  color:#638ba1; }\n50%{opacity: .5; color:#638ba1;}\n80%{opacity: 1; color: #638ba1;}\n100%{opacity: 0.5; color: #638ba1;}\n\n}\n\n@keyframes blink{\n0%{opacity: 0;  color:#638ba1; }\n50%{opacity: .5; color:#638ba1;}\n80%{opacity: 1; color: #638ba1;}\n100%{opacity: 0.5; color: #638ba1;}\n\n}\n\na.results-loaded{\n    display: none;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcmVzdWx0cy1jb250YWluZXIvcmVzdWx0cy1jb250YWluZXIuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQ0E7SUFDSSxPQUFPO0lBQ1AsWUFBWTtJQUNaLGlCQUFpQjtJQUNqQixTQUFTO0lBQ1Qsa0JBQWtCO0FBQ3RCOztBQUVBO0lBQ0ksU0FBUztJQUNULGtCQUFrQjtJQUNsQixVQUFVO0lBQ1YsYUFBYTtBQUNqQjs7QUFFQTtJQUNJLFdBQVc7SUFDWCxnQkFBZ0I7SUFDaEIsNkRBQTZEO0FBQ2pFOztBQUVBO0lBQ0ksU0FBUztJQUNULDhCQUE4QjtJQUM5QixnQkFBZ0I7QUFDcEI7O0FBRUE7SUFDSSxTQUFTO0lBQ1QsV0FBVztJQUNYLG9HQUFvRztBQUN4Rzs7QUFFQTtJQUNJLGtCQUFrQjtJQUNsQixrQkFBa0I7SUFDbEIsV0FBVztJQUNYLGlCQUFpQjtJQUNqQixrQkFBa0I7QUFDdEI7O0FBRUE7SUFDSSxZQUFZO0lBQ1osaUJBQWlCO0lBQ2pCLGVBQWU7QUFDbkI7O0FBRUE7SUFDSSxjQUFjO0lBQ2QsbUJBQW1CO0lBQ25CLGtCQUFrQjtJQUNsQixZQUFZO0lBQ1osa0JBQWtCO0lBQ2xCLFNBQVM7SUFDVCxRQUFRO0FBQ1o7O0FBRUE7SUFDSSxtQkFBbUI7SUFDbkIsa0JBQWtCO0lBQ2xCLFlBQVk7SUFDWixrQkFBa0I7SUFDbEIsU0FBUztJQUNULFFBQVE7SUFDUiwyQ0FBbUM7WUFBbkMsbUNBQW1DO0FBQ3ZDOztBQUNBO0FBQ0EsR0FBRyxVQUFVLEdBQUcsYUFBYSxFQUFFO0FBQy9CLElBQUksV0FBVyxFQUFFLGFBQWEsQ0FBQztBQUMvQixJQUFJLFVBQVUsRUFBRSxjQUFjLENBQUM7QUFDL0IsS0FBSyxZQUFZLEVBQUUsY0FBYyxDQUFDOztBQUVsQzs7QUFOQTtBQUNBLEdBQUcsVUFBVSxHQUFHLGFBQWEsRUFBRTtBQUMvQixJQUFJLFdBQVcsRUFBRSxhQUFhLENBQUM7QUFDL0IsSUFBSSxVQUFVLEVBQUUsY0FBYyxDQUFDO0FBQy9CLEtBQUssWUFBWSxFQUFFLGNBQWMsQ0FBQzs7QUFFbEM7O0FBR0E7SUFDSSxhQUFhO0FBQ2pCIiwiZmlsZSI6InNyYy9hcHAvcmVzdWx0cy1jb250YWluZXIvcmVzdWx0cy1jb250YWluZXIuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIlxuLnR3ZWV0Y29udGFpbmVye1xuICAgIHRvcDoycHg7XG4gICAgcGFkZGluZzogM3B4O1xuICAgIHRleHQtYWxpZ246IHJpZ2h0O1xuICAgIGxlZnQ6IDIwJTtcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG59XG5cbi5yZW1vdmVkX2xhYmVse1xuICAgIHRvcDogNDBweDtcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgbGVmdDogMTBweDtcbiAgICB6LWluZGV4OiAtMTAwO1xufVxuXG4udXNlcnNlcGVyYXRvcntcbiAgICBoZWlnaHQ6IDFweDtcbiAgICBiYWNrZ3JvdW5kOiAjMzMzO1xuICAgIGJhY2tncm91bmQtaW1hZ2U6IGxpbmVhci1ncmFkaWVudCh0byByaWdodCwgI2NjYywgIzMzMywgI2NjYyk7XG59XG5cbi51c2VydHdlZXRze1xuICAgIGJvcmRlcjogMDtcbiAgICBib3JkZXItYm90dG9tOiAxcHggZGFzaGVkICNjY2M7XG4gICAgYmFja2dyb3VuZDogIzk5OTtcbn1cblxuLnR3ZWV0c2VwZXJhdG9ye1xuICAgIGJvcmRlcjogMDtcbiAgICBoZWlnaHQ6IDFweDtcbiAgICBiYWNrZ3JvdW5kLWltYWdlOiBsaW5lYXItZ3JhZGllbnQodG8gcmlnaHQsIHJnYmEoMCwgMCwgMCwgMCksIHJnYmEoMCwgMCwgMCwgMC43NSksIHJnYmEoMCwgMCwgMCwgMCkpO1xufVxuXG4ucmVzdWx0c19jb250YWluZXJ7XG4gICAgb3ZlcmZsb3cteTogc2Nyb2xsO1xuICAgIG92ZXJmbG93LXg6IGhpZGRlbjtcbiAgICBoZWlnaHQ6IDc1JTtcbiAgICBwYWRkaW5nLWxlZnQ6IDIwJTtcbiAgICBwYWRkaW5nLXJpZ2h0OiAyMCU7XG59XG5cbmEudXNlcm5hbWV7XG4gICAgcGFkZGluZzogM3B4O1xuICAgIG1hcmdpbi1sZWZ0OiAyMHB4O1xuICAgIG1hcmdpbi10b3A6IDJweDsgXG59XG5cbmEuYXdhaXQtcmVzdWx0c3tcbiAgICBjb2xvcjogIzg5OTU5YztcbiAgICBtYXJnaW4tbGVmdDogLTE1MHB4O1xuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICB3aWR0aDogMzAwcHg7XG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgIGxlZnQ6IDUwJTtcbiAgICB0b3A6IDIwJTtcbn1cblxuYS5sb2FkLXJlc3VsdHN7XG4gICAgbWFyZ2luLWxlZnQ6IC0xNTBweDtcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gICAgd2lkdGg6IDMwMHB4O1xuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdG9wOiAyMCU7XG4gICAgYW5pbWF0aW9uOiBibGluayAxcyBsaW5lYXIgaW5maW5pdGU7XG59XG5Aa2V5ZnJhbWVzIGJsaW5re1xuMCV7b3BhY2l0eTogMDsgIGNvbG9yOiM2MzhiYTE7IH1cbjUwJXtvcGFjaXR5OiAuNTsgY29sb3I6IzYzOGJhMTt9XG44MCV7b3BhY2l0eTogMTsgY29sb3I6ICM2MzhiYTE7fVxuMTAwJXtvcGFjaXR5OiAwLjU7IGNvbG9yOiAjNjM4YmExO31cblxufVxuXG5cbmEucmVzdWx0cy1sb2FkZWR7XG4gICAgZGlzcGxheTogbm9uZTtcbn0iXX0= */"
+
+/***/ }),
+
+/***/ "./src/app/results-container/results-container.component.html":
+/*!********************************************************************!*\
+  !*** ./src/app/results-container/results-container.component.html ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div id=\"preloaded_tweet\" style=\"display:hidden\">\n  <ngx-tweet tweetId=\"1110423138570067968\" style=\"display:none\"></ngx-tweet>\n</div>\n<section class=\"example-section\">\n  Text\n  <mat-slide-toggle class=\"example-margin\" [color]=\"color\" [checked]=\"embeddTweets\"\n    (change)=\"embeddTweets = !embeddTweets\" [disabled]=\"disabled\">\n    Embedded tweets\n  </mat-slide-toggle>\n</section>\n<div class=\"results_container\">\n  <a [class]=\"resultsPlaceHolderStyle\">results will show here</a>\n  <ng-container *ngFor=\"let user of tweetsJson\">\n    <div class=\"usercontainer\">\n      <div class=\"usernamebox\">\n        <a href=\"http://twitter.com/{{user.name}}\" class=\"username\"> {{user.name}} </a>\n      </div>\n      <div *ngFor=\"let tweet of user.tweets\">\n        <div class=\"tweetcontainer\" *ngIf=\"embeddTweets\">\n          <ngx-tweet tweetId={{tweet.tweetid}}></ngx-tweet>\n        </div>\n        <div class=\"tweetcontainer\" *ngIf=\"!embeddTweets\">\n          <a href=\"http://twitter.com/user/status/{{tweet.tweetid}}\">{{tweet.msg}}</a>\n        </div>\n      </div>\n      <hr class=\"tweetseperator\">\n    </div>\n  </ng-container>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/results-container/results-container.component.ts":
+/*!******************************************************************!*\
+  !*** ./src/app/results-container/results-container.component.ts ***!
+  \******************************************************************/
+/*! exports provided: RESULTS_STATE, ResultsContainerComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RESULTS_STATE", function() { return RESULTS_STATE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResultsContainerComponent", function() { return ResultsContainerComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var RESULTS_STATE = {
+    WAITING: 'await-results',
+    LOADING: 'load-results',
+    LOADED: 'results-loaded'
+};
+var ResultsContainerComponent = /** @class */ (function () {
+    function ResultsContainerComponent() {
+        this.embeddTweets = false;
+    }
+    ResultsContainerComponent.prototype.ngOnInit = function () {
+    };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+    ], ResultsContainerComponent.prototype, "tweetsJson", void 0);
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", String)
+    ], ResultsContainerComponent.prototype, "resultsPlaceHolderStyle", void 0);
+    ResultsContainerComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-results-container',
+            template: __webpack_require__(/*! ./results-container.component.html */ "./src/app/results-container/results-container.component.html"),
+            styles: [__webpack_require__(/*! ./results-container.component.css */ "./src/app/results-container/results-container.component.css")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], ResultsContainerComponent);
+    return ResultsContainerComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/subject-density/density-settings/density-settings.component.css":
 /*!*********************************************************************************!*\
   !*** ./src/app/subject-density/density-settings/density-settings.component.css ***!
@@ -549,7 +635,7 @@ var DensitySettingsComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "#info{\n    text-align: center;\n    -webkit-text-emphasis-style: bold;\n            text-emphasis-style: bold;\n    color: #1ca1f2;    \n}\n\n.tweetcontainer{\n    top:2px;\n    padding: 3px;\n    text-align: right;\n    left: 20%;\n    position: relative;\n}\n\n.removed_label{\n    top: 40px;\n    position: relative;\n    left: 10px;\n    z-index: -100;\n}\n\n.userseperator{\n    height: 1px;\n    background: #333;\n    background-image: linear-gradient(to right, #ccc, #333, #ccc);\n}\n\n.usertweets{\n    border: 0;\n    border-bottom: 1px dashed #ccc;\n    background: #999;\n}\n\n.tweetseperator{\n    border: 0;\n    height: 1px;\n    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));\n}\n\n.results_container{\n    overflow-y: scroll;\n    overflow-x: hidden;\n    height: 75%;\n    padding-left: 20%;\n    padding-right: 20%;\n}\n\na.username{\n    padding: 3px;\n    margin-left: 20px;\n    margin-top: 2px; \n}\n\na.await-results{\n    color: #89959c;\n    margin-left: -150px;\n    text-align: center;\n    width: 300px;\n    position: relative;\n    left: 50%;\n    top: 20%;\n}\n\na.load-results{\n    margin-left: -150px;\n    text-align: center;\n    width: 300px;\n    position: relative;\n    left: 50%;\n    top: 20%;\n    -webkit-animation: blink 1s linear infinite;\n            animation: blink 1s linear infinite;\n}\n\n@-webkit-keyframes blink{\n0%{opacity: 0;  color:#638ba1; }\n50%{opacity: .5; color:#638ba1;}\n80%{opacity: 1; color: #638ba1;}\n100%{opacity: 0.5; color: #638ba1;}\n\n}\n\n@keyframes blink{\n0%{opacity: 0;  color:#638ba1; }\n50%{opacity: .5; color:#638ba1;}\n80%{opacity: 1; color: #638ba1;}\n100%{opacity: 0.5; color: #638ba1;}\n\n}\n\na.results-loaded{\n    display: none;\n}\n\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvc3ViamVjdC1kZW5zaXR5L3N1YmplY3QtZGVuc2l0eS5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0lBQ0ksa0JBQWtCO0lBQ2xCLGlDQUF5QjtZQUF6Qix5QkFBeUI7SUFDekIsY0FBYztBQUNsQjs7QUFFQTtJQUNJLE9BQU87SUFDUCxZQUFZO0lBQ1osaUJBQWlCO0lBQ2pCLFNBQVM7SUFDVCxrQkFBa0I7QUFDdEI7O0FBRUE7SUFDSSxTQUFTO0lBQ1Qsa0JBQWtCO0lBQ2xCLFVBQVU7SUFDVixhQUFhO0FBQ2pCOztBQUVBO0lBQ0ksV0FBVztJQUNYLGdCQUFnQjtJQUNoQiw2REFBNkQ7QUFDakU7O0FBRUE7SUFDSSxTQUFTO0lBQ1QsOEJBQThCO0lBQzlCLGdCQUFnQjtBQUNwQjs7QUFFQTtJQUNJLFNBQVM7SUFDVCxXQUFXO0lBQ1gsb0dBQW9HO0FBQ3hHOztBQUVBO0lBQ0ksa0JBQWtCO0lBQ2xCLGtCQUFrQjtJQUNsQixXQUFXO0lBQ1gsaUJBQWlCO0lBQ2pCLGtCQUFrQjtBQUN0Qjs7QUFFQTtJQUNJLFlBQVk7SUFDWixpQkFBaUI7SUFDakIsZUFBZTtBQUNuQjs7QUFFQTtJQUNJLGNBQWM7SUFDZCxtQkFBbUI7SUFDbkIsa0JBQWtCO0lBQ2xCLFlBQVk7SUFDWixrQkFBa0I7SUFDbEIsU0FBUztJQUNULFFBQVE7QUFDWjs7QUFFQTtJQUNJLG1CQUFtQjtJQUNuQixrQkFBa0I7SUFDbEIsWUFBWTtJQUNaLGtCQUFrQjtJQUNsQixTQUFTO0lBQ1QsUUFBUTtJQUNSLDJDQUFtQztZQUFuQyxtQ0FBbUM7QUFDdkM7O0FBQ0E7QUFDQSxHQUFHLFVBQVUsR0FBRyxhQUFhLEVBQUU7QUFDL0IsSUFBSSxXQUFXLEVBQUUsYUFBYSxDQUFDO0FBQy9CLElBQUksVUFBVSxFQUFFLGNBQWMsQ0FBQztBQUMvQixLQUFLLFlBQVksRUFBRSxjQUFjLENBQUM7O0FBRWxDOztBQU5BO0FBQ0EsR0FBRyxVQUFVLEdBQUcsYUFBYSxFQUFFO0FBQy9CLElBQUksV0FBVyxFQUFFLGFBQWEsQ0FBQztBQUMvQixJQUFJLFVBQVUsRUFBRSxjQUFjLENBQUM7QUFDL0IsS0FBSyxZQUFZLEVBQUUsY0FBYyxDQUFDOztBQUVsQzs7QUFHQTtJQUNJLGFBQWE7QUFDakIiLCJmaWxlIjoic3JjL2FwcC9zdWJqZWN0LWRlbnNpdHkvc3ViamVjdC1kZW5zaXR5LmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIjaW5mb3tcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gICAgdGV4dC1lbXBoYXNpcy1zdHlsZTogYm9sZDtcbiAgICBjb2xvcjogIzFjYTFmMjsgICAgXG59XG5cbi50d2VldGNvbnRhaW5lcntcbiAgICB0b3A6MnB4O1xuICAgIHBhZGRpbmc6IDNweDtcbiAgICB0ZXh0LWFsaWduOiByaWdodDtcbiAgICBsZWZ0OiAyMCU7XG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xufVxuXG4ucmVtb3ZlZF9sYWJlbHtcbiAgICB0b3A6IDQwcHg7XG4gICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgIGxlZnQ6IDEwcHg7XG4gICAgei1pbmRleDogLTEwMDtcbn1cblxuLnVzZXJzZXBlcmF0b3J7XG4gICAgaGVpZ2h0OiAxcHg7XG4gICAgYmFja2dyb3VuZDogIzMzMztcbiAgICBiYWNrZ3JvdW5kLWltYWdlOiBsaW5lYXItZ3JhZGllbnQodG8gcmlnaHQsICNjY2MsICMzMzMsICNjY2MpO1xufVxuXG4udXNlcnR3ZWV0c3tcbiAgICBib3JkZXI6IDA7XG4gICAgYm9yZGVyLWJvdHRvbTogMXB4IGRhc2hlZCAjY2NjO1xuICAgIGJhY2tncm91bmQ6ICM5OTk7XG59XG5cbi50d2VldHNlcGVyYXRvcntcbiAgICBib3JkZXI6IDA7XG4gICAgaGVpZ2h0OiAxcHg7XG4gICAgYmFja2dyb3VuZC1pbWFnZTogbGluZWFyLWdyYWRpZW50KHRvIHJpZ2h0LCByZ2JhKDAsIDAsIDAsIDApLCByZ2JhKDAsIDAsIDAsIDAuNzUpLCByZ2JhKDAsIDAsIDAsIDApKTtcbn1cblxuLnJlc3VsdHNfY29udGFpbmVye1xuICAgIG92ZXJmbG93LXk6IHNjcm9sbDtcbiAgICBvdmVyZmxvdy14OiBoaWRkZW47XG4gICAgaGVpZ2h0OiA3NSU7XG4gICAgcGFkZGluZy1sZWZ0OiAyMCU7XG4gICAgcGFkZGluZy1yaWdodDogMjAlO1xufVxuXG5hLnVzZXJuYW1le1xuICAgIHBhZGRpbmc6IDNweDtcbiAgICBtYXJnaW4tbGVmdDogMjBweDtcbiAgICBtYXJnaW4tdG9wOiAycHg7IFxufVxuXG5hLmF3YWl0LXJlc3VsdHN7XG4gICAgY29sb3I6ICM4OTk1OWM7XG4gICAgbWFyZ2luLWxlZnQ6IC0xNTBweDtcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gICAgd2lkdGg6IDMwMHB4O1xuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdG9wOiAyMCU7XG59XG5cbmEubG9hZC1yZXN1bHRze1xuICAgIG1hcmdpbi1sZWZ0OiAtMTUwcHg7XG4gICAgdGV4dC1hbGlnbjogY2VudGVyO1xuICAgIHdpZHRoOiAzMDBweDtcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgbGVmdDogNTAlO1xuICAgIHRvcDogMjAlO1xuICAgIGFuaW1hdGlvbjogYmxpbmsgMXMgbGluZWFyIGluZmluaXRlO1xufVxuQGtleWZyYW1lcyBibGlua3tcbjAle29wYWNpdHk6IDA7ICBjb2xvcjojNjM4YmExOyB9XG41MCV7b3BhY2l0eTogLjU7IGNvbG9yOiM2MzhiYTE7fVxuODAle29wYWNpdHk6IDE7IGNvbG9yOiAjNjM4YmExO31cbjEwMCV7b3BhY2l0eTogMC41OyBjb2xvcjogIzYzOGJhMTt9XG5cbn1cblxuXG5hLnJlc3VsdHMtbG9hZGVke1xuICAgIGRpc3BsYXk6IG5vbmU7XG59XG5cbiJdfQ== */"
+module.exports = "#info{\n    text-align: center;\n    -webkit-text-emphasis-style: bold;\n            text-emphasis-style: bold;\n    color: #1ca1f2;    \n}\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvc3ViamVjdC1kZW5zaXR5L3N1YmplY3QtZGVuc2l0eS5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0lBQ0ksa0JBQWtCO0lBQ2xCLGlDQUF5QjtZQUF6Qix5QkFBeUI7SUFDekIsY0FBYztBQUNsQiIsImZpbGUiOiJzcmMvYXBwL3N1YmplY3QtZGVuc2l0eS9zdWJqZWN0LWRlbnNpdHkuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIiNpbmZve1xuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgICB0ZXh0LWVtcGhhc2lzLXN0eWxlOiBib2xkO1xuICAgIGNvbG9yOiAjMWNhMWYyOyAgICBcbn1cbiJdfQ== */"
 
 /***/ }),
 
@@ -560,7 +646,7 @@ module.exports = "#info{\n    text-align: center;\n    -webkit-text-emphasis-sty
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"height:100%; overflow: hidden;\" >\n  <p id=info>\n    This is the subjects density module.<br>\n    Here you can search for users which mostly tweet about a single topic, meaning their topical variance is low \n  </p>\n  <hr>\n  <app-density-settings (resultsTrigger) = handleSettings($event) style=\"height:25%\" ></app-density-settings >\n  <br><br>\n  <hr>\n  <div id=\"preloaded_tweet\" style=\"display:hidden\">\n    <ngx-tweet tweetId=\"1110423138570067968\" style=\"display:none\"></ngx-tweet>\n  </div>\n    <section class=\"example-section\">\n      Text\n      <mat-slide-toggle class=\"example-margin\" [color]=\"color\" [checked]=\"embeddTweets\" (change)=\"embeddTweets = !embeddTweets\" [disabled]=\"disabled\">\n        Embedded tweets\n      </mat-slide-toggle>\n    </section>\n  <div class=\"results_container\">\n    <a [class]=\"resultsPlaceHolderStyle\">results will show here</a>\n    <ng-container *ngFor=\"let user of tweetsJson\">\n      <div class=\"usercontainer\">\n        <div class=\"usernamebox\">\n          <a href=\"http://twitter.com/{{user.name}}\" class=\"username\"> {{user.name}} </a>\n        </div>\n        <div *ngFor=\"let tweet of user.tweets\">\n          <div class=\"tweetcontainer\" *ngIf=\"embeddTweets\">\n            <ngx-tweet tweetId={{tweet.tweetid}}></ngx-tweet>\n          </div>\n          <div class=\"tweetcontainer\" *ngIf=\"!embeddTweets\">\n            <a href=\"http://twitter.com/user/status/{{tweet.tweetid}}\">{{tweet.msg}}</a>\n          </div>\n        </div>\n        <hr class=\"tweetseperator\">\n      </div>\n    </ng-container>\n  </div>\n</div>\n"
+module.exports = "<div style=\"height:100%; overflow: hidden;\" >\n  <p id=info>\n    This is the subjects density module.<br>\n    Here you can search for users which mostly tweet about a single topic, meaning their topical variance is low \n  </p>\n  <hr>\n  <app-density-settings (resultsTrigger) = handleSettings($event) style=\"height:25%\" ></app-density-settings >\n  <br><br>\n  <hr>\n    <app-results-container [tweetsJson]=\"resultsJson\" [resultsPlaceHolderStyle]=\"resultsState\"></app-results-container>\n</div>\n"
 
 /***/ }),
 
@@ -577,49 +663,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _hebrew_bots_service_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../hebrew-bots-service.service */ "./src/app/hebrew-bots-service.service.ts");
-/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm5/platform-browser.js");
-
+/* harmony import */ var _results_container_results_container_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../results-container/results-container.component */ "./src/app/results-container/results-container.component.ts");
 
 
 
 
 var SubjectDensityComponent = /** @class */ (function () {
-    function SubjectDensityComponent(botsService, renderer2, _document) {
-        this.renderer2 = renderer2;
-        this._document = _document;
-        this.resultsPlaceHolderStyle = "await-results";
-        this.embeddTweets = false;
+    function SubjectDensityComponent(botsService) {
         this.botService = botsService;
+        this.resultsState = _results_container_results_container_component__WEBPACK_IMPORTED_MODULE_3__["RESULTS_STATE"].WAITING;
     }
-    SubjectDensityComponent.prototype.callbackClosure = function (i, callback) {
-        return function () {
-            return callback(i);
-        };
-    };
     SubjectDensityComponent.prototype.handleSettings = function (evt) {
         var _this = this;
-        this.resultsPlaceHolderStyle = "load-results";
-        this.tweetsJson = null;
+        this.resultsState = _results_container_results_container_component__WEBPACK_IMPORTED_MODULE_3__["RESULTS_STATE"].LOADING;
+        this.resultsJson = null;
         var setingsJson = JSON.stringify(evt);
-        this.botService.getSubjectDensityList(setingsJson, function (i) { _this.set_json(i); });
+        this.botService.getSubjectDensityList(setingsJson, function (r) { _this.set_json(r); });
     };
     SubjectDensityComponent.prototype.set_json = function (json) {
-        this.tweetsJson = json;
-        this.resultsPlaceHolderStyle = "results-loaded";
-    };
-    SubjectDensityComponent.prototype.getCallback = function () {
-        var ref = this.tweetsJson;
-        return function (dataJSON) {
-            ref = dataJSON;
-        };
+        this.resultsJson = json;
+        this.resultsState = _results_container_results_container_component__WEBPACK_IMPORTED_MODULE_3__["RESULTS_STATE"].LOADED;
     };
     SubjectDensityComponent.prototype.ngOnInit = function () {
-        var r = Math.random().toString(36).substring(7);
-        var s = this.renderer2.createElement('script');
-        s.type = 'text/javascript';
-        s.src = "http://localhost:8000/static/widgets.js";
-        s.text = "";
-        this.renderer2.appendChild(this._document.body, s);
     };
     SubjectDensityComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -627,10 +692,88 @@ var SubjectDensityComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./subject-density.component.html */ "./src/app/subject-density/subject-density.component.html"),
             styles: [__webpack_require__(/*! ./subject-density.component.css */ "./src/app/subject-density/subject-density.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__param"](2, Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Inject"])(_angular_platform_browser__WEBPACK_IMPORTED_MODULE_3__["DOCUMENT"])),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_hebrew_bots_service_service__WEBPACK_IMPORTED_MODULE_2__["HebrewBotsServiceService"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["Renderer2"], Object])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_hebrew_bots_service_service__WEBPACK_IMPORTED_MODULE_2__["HebrewBotsServiceService"]])
     ], SubjectDensityComponent);
     return SubjectDensityComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/tweet-similarity/tweet-similarity-settings/tweet-similarity-settings.component.css":
+/*!****************************************************************************************************!*\
+  !*** ./src/app/tweet-similarity/tweet-similarity-settings/tweet-similarity-settings.component.css ***!
+  \****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "#density-settings-origin-text{\n    width: 80%;\n}\n\n#settingsContainer{\n    padding-left: 10px;\n}\n\na.toollabel{\n    color: #5893b7;\n    padding-top: 13px;\n    vertical-align: bottom;\n    padding-left: 5px;\n    padding-right: 5px;\n}\n\n#show-results-button{\n    background-color: #1ca1f2;\n    left: 50%;\n    margin-left: -60px;\n    top: 80%;\n}\n\n#kTweetSelector{\n    margin-left: 20px;\n    width: 40px;\n}\n\n#textbox-container{\n    margin-left: 20px;\n}\n\nlabel.settings-container1{\n    margin-left: 20px;\n}\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvdHdlZXQtc2ltaWxhcml0eS90d2VldC1zaW1pbGFyaXR5LXNldHRpbmdzL3R3ZWV0LXNpbWlsYXJpdHktc2V0dGluZ3MuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtJQUNJLFVBQVU7QUFDZDs7QUFFQTtJQUNJLGtCQUFrQjtBQUN0Qjs7QUFFQTtJQUNJLGNBQWM7SUFDZCxpQkFBaUI7SUFDakIsc0JBQXNCO0lBQ3RCLGlCQUFpQjtJQUNqQixrQkFBa0I7QUFDdEI7O0FBRUE7SUFDSSx5QkFBeUI7SUFDekIsU0FBUztJQUNULGtCQUFrQjtJQUNsQixRQUFRO0FBQ1o7O0FBRUE7SUFDSSxpQkFBaUI7SUFDakIsV0FBVztBQUNmOztBQUVBO0lBQ0ksaUJBQWlCO0FBQ3JCOztBQUVBO0lBQ0ksaUJBQWlCO0FBQ3JCIiwiZmlsZSI6InNyYy9hcHAvdHdlZXQtc2ltaWxhcml0eS90d2VldC1zaW1pbGFyaXR5LXNldHRpbmdzL3R3ZWV0LXNpbWlsYXJpdHktc2V0dGluZ3MuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIiNkZW5zaXR5LXNldHRpbmdzLW9yaWdpbi10ZXh0e1xuICAgIHdpZHRoOiA4MCU7XG59XG5cbiNzZXR0aW5nc0NvbnRhaW5lcntcbiAgICBwYWRkaW5nLWxlZnQ6IDEwcHg7XG59XG5cbmEudG9vbGxhYmVse1xuICAgIGNvbG9yOiAjNTg5M2I3O1xuICAgIHBhZGRpbmctdG9wOiAxM3B4O1xuICAgIHZlcnRpY2FsLWFsaWduOiBib3R0b207XG4gICAgcGFkZGluZy1sZWZ0OiA1cHg7XG4gICAgcGFkZGluZy1yaWdodDogNXB4O1xufVxuXG4jc2hvdy1yZXN1bHRzLWJ1dHRvbntcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjMWNhMWYyO1xuICAgIGxlZnQ6IDUwJTtcbiAgICBtYXJnaW4tbGVmdDogLTYwcHg7XG4gICAgdG9wOiA4MCU7XG59XG5cbiNrVHdlZXRTZWxlY3RvcntcbiAgICBtYXJnaW4tbGVmdDogMjBweDtcbiAgICB3aWR0aDogNDBweDtcbn1cblxuI3RleHRib3gtY29udGFpbmVye1xuICAgIG1hcmdpbi1sZWZ0OiAyMHB4O1xufVxuXG5sYWJlbC5zZXR0aW5ncy1jb250YWluZXIxe1xuICAgIG1hcmdpbi1sZWZ0OiAyMHB4O1xufVxuIl19 */"
+
+/***/ }),
+
+/***/ "./src/app/tweet-similarity/tweet-similarity-settings/tweet-similarity-settings.component.html":
+/*!*****************************************************************************************************!*\
+  !*** ./src/app/tweet-similarity/tweet-similarity-settings/tweet-similarity-settings.component.html ***!
+  \*****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div id=settingsBoxContainer fxLayout=\"row\" fxLayoutGap=10%>\n  <div id=settingsContainer1 fxLayout=\"column\" fxLayout.xs=\"row\" fxLayoutGap=\"10px\">\n    <label class=\"settings-container1\">Enter cutoff number for the list of returned tweets</label>\n    <input mdInput type=\"number\" id=\"kTweetSelector\" [value]=\"kTweets\" (change)=\"kTweets=$event.target.value\">\n\n    <label class=\"settings-container1\">Enter origin text to which tweets should be similar to <br>(notice\n      sentiments are not taken into consideration, only topical relations)</label>\n    <div id=\"textbox-container\" fxLayout=\"row\" fxFlex=60px>\n      <textarea matInput placeholder=\"Origin text\" [value]=\"originText\" (change)=\"doTextareaValueChange($event)\"\n        fxFlex=90%>\n</textarea>\n    </div>\n  </div>\n  <div id=settingsContainer2 fxLayout=\"column\" fxLayout.xs=\"row\" fxLayoutGap=\"10px\">\n    <div id=\"button-container\" fxLayout=\"row\" fxLayoutGap=\"10px\">\n      <button mat-raised-button color=\"primary\" id=\"show-results-button\" (click)=\"showResults()\">Show results</button>\n    </div>\n  </div>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/tweet-similarity/tweet-similarity-settings/tweet-similarity-settings.component.ts":
+/*!***************************************************************************************************!*\
+  !*** ./src/app/tweet-similarity/tweet-similarity-settings/tweet-similarity-settings.component.ts ***!
+  \***************************************************************************************************/
+/*! exports provided: TweetSimilaritySettingsComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TweetSimilaritySettingsComponent", function() { return TweetSimilaritySettingsComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var K_TWEETS = "kTweets";
+var ORIGIN_TEXT = "originText";
+var PROMPT_ORIGIN_TEXT = "חפש ציוץ כמוני";
+var TweetSimilaritySettingsComponent = /** @class */ (function () {
+    function TweetSimilaritySettingsComponent() {
+        this.resultsTrigger = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
+        this.originText = PROMPT_ORIGIN_TEXT;
+        this.kTweets = 40;
+    }
+    TweetSimilaritySettingsComponent.prototype.showResults = function () {
+        var settingsObj = {};
+        settingsObj[ORIGIN_TEXT] = this.originText;
+        settingsObj[K_TWEETS] = this.kTweets;
+        this.resultsTrigger.emit(settingsObj);
+    };
+    TweetSimilaritySettingsComponent.prototype.doTextareaValueChange = function (ev) {
+        try {
+            this.originText = ev.target.value;
+        }
+        catch (e) {
+            console.info('could not set textarea-value');
+        }
+    };
+    TweetSimilaritySettingsComponent.prototype.ngOnInit = function () { };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"])
+    ], TweetSimilaritySettingsComponent.prototype, "resultsTrigger", void 0);
+    TweetSimilaritySettingsComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-tweet-similarity-settings',
+            template: __webpack_require__(/*! ./tweet-similarity-settings.component.html */ "./src/app/tweet-similarity/tweet-similarity-settings/tweet-similarity-settings.component.html"),
+            styles: [__webpack_require__(/*! ./tweet-similarity-settings.component.css */ "./src/app/tweet-similarity/tweet-similarity-settings/tweet-similarity-settings.component.css")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+    ], TweetSimilaritySettingsComponent);
+    return TweetSimilaritySettingsComponent;
 }());
 
 
@@ -655,7 +798,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  tweet-similarity works!\n</p>\n"
+module.exports = "<div style=\"height:100%; overflow: hidden;\">\n  <p id=info>\n    This is the tweet similarity module.<br>\n    Here you can search for tweets that are close to the given input sentence, in a specified time frame.\n  </p>\n  <hr>\n  <app-tweet-similarity-settings (resultsTrigger)=handleSettings($event) style=\"height:25%\"></app-tweet-similarity-settings>\n  <br><br>\n  <hr>\n  <app-results-container [tweetsJson]=\"resultsJson\" [resultsPlaceHolderStyle]=\"resultsState\"></app-results-container>\n</div>"
 
 /***/ }),
 
@@ -671,11 +814,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TweetSimilarityComponent", function() { return TweetSimilarityComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _results_container_results_container_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../results-container/results-container.component */ "./src/app/results-container/results-container.component.ts");
+/* harmony import */ var _hebrew_bots_service_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../hebrew-bots-service.service */ "./src/app/hebrew-bots-service.service.ts");
+
+
 
 
 var TweetSimilarityComponent = /** @class */ (function () {
-    function TweetSimilarityComponent() {
+    function TweetSimilarityComponent(botsService) {
+        this.resultsState = _results_container_results_container_component__WEBPACK_IMPORTED_MODULE_2__["RESULTS_STATE"].WAITING;
+        this.botService = botsService;
     }
+    TweetSimilarityComponent.prototype.handleSettings = function (evt) {
+        var _this = this;
+        this.resultsState = _results_container_results_container_component__WEBPACK_IMPORTED_MODULE_2__["RESULTS_STATE"].LOADING;
+        this.resultsJson = null;
+        var setingsJson = JSON.stringify(evt);
+        this.botService.getSimilarTweets(setingsJson, function (r) { _this.set_json(r); });
+    };
+    TweetSimilarityComponent.prototype.set_json = function (json) {
+        this.resultsJson = json;
+        this.resultsState = _results_container_results_container_component__WEBPACK_IMPORTED_MODULE_2__["RESULTS_STATE"].LOADED;
+    };
     TweetSimilarityComponent.prototype.ngOnInit = function () {
     };
     TweetSimilarityComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -684,7 +844,7 @@ var TweetSimilarityComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./tweet-similarity.component.html */ "./src/app/tweet-similarity/tweet-similarity.component.html"),
             styles: [__webpack_require__(/*! ./tweet-similarity.component.css */ "./src/app/tweet-similarity/tweet-similarity.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_hebrew_bots_service_service__WEBPACK_IMPORTED_MODULE_3__["HebrewBotsServiceService"]])
     ], TweetSimilarityComponent);
     return TweetSimilarityComponent;
 }());
