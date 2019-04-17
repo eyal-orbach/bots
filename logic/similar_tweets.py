@@ -5,49 +5,45 @@ import numpy as np
 
 from logic import dense_users, tweet2vec
 
+
+
+
 class similarity_request_obj:
     def __init__(self, k_tweets, text):
         self.k_tweets = int(k_tweets)
         self.text = text
 
 
-tweet_vecs = None
+tweets_vecs = None
+tweets_vecs_magnitudes = None
 def load_twts(twts):
-    global tweet_vecs
-    tweet_vecs = twts
+    global tweets_vecs, tweets_vecs_magnitudes
+    tweets_vecs = twts
+    tweets_vecs_magnitudes = np.linalg.norm(tweets_vecs, axis=1)
 
-DIST_FROM_TWEET = "dist_from_tweet"
-
-
-
-def filter_tweets(twts, start, end):
-    ordered_twts = sorted(twts.items(), key=lambda x:float(x[1][tweet2vec.DETAILS][1]))
-    filtered = [x for x in ordered_twts if float(x[1][tweet2vec.DETAILS][1]) >= start and float(x[1][tweet2vec.DETAILS][1]) <= end]
-    return filtered
-
-
-def calc_tweets_distance_from_base(dtwts, base_vec):
-    for twt in dtwts:
-        dist_from_base = np.linalg.norm(twt[1][tweet2vec.VECTOR] - base_vec)
-        twt[1][DIST_FROM_TWEET] = dist_from_base
-
-    return dtwts
-
-def get_top_k(ts, k):
-    # sorted_users = sorted(users.items(), key=lambda x:x[1][AVG_DIST])
-    sorted_tweets = sorted(ts, key=lambda x: float(x[1][DIST_FROM_TWEET]))
-    return sorted_tweets[:k]
 
 
 def get_similar_tweets_indices(origin_text):
     base_vec = tweet2vec.instance.get_vec(origin_text)
-    #eucleadean distance
-    twts_minus_base = tweet_vecs - base_vec
-    distances_from_base = np.linalg.norm(twts_minus_base, axis=1)
+    distances_from_base = dist_method(base_vec, tweets_vecs, tweets_vecs_magnitudes)
 
     return iter(np.argsort(distances_from_base))
 
 
+def get_eucledan_distances(base_vec: np.ndarray, target_vecs: np.ndarray, ignore):
+    targets_minus_base = target_vecs - base_vec
+    distances_from_base = np.linalg.norm(targets_minus_base, axis=1)
+    return distances_from_base
+
+def get_cosine_distances(base_vec: np.ndarray, target_vecs: np.ndarray, target_vecs_magnitudes: np.ndarray):
+    base_magnitude = np.linalg.norm(base_vec)
+    denominators = target_vecs_magnitudes * base_magnitude
+    numerators = (np.dot(base_vec, target_vecs))
+    cosines = numerators / denominators
+    return 0.5 * (1 - cosines)
+
+
+#todo: insert logic to filter dates
 def is_valid_date(dbtweet):
     return True
 
@@ -72,7 +68,6 @@ def get_similar_tweets(request_obj:similarity_request_obj):
     return final_users
 
 
-
-
-
+dist_method = get_eucledan_distances
+# dist_method = get_cosine_distances
 

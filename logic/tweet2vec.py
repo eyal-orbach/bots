@@ -9,7 +9,7 @@ def eucleadean_dist(base_vec, target_vec):
 
 
 def cos_dist(base_vec, target_vec):
-    return np.dot(base_vec, target_vec)/(np.linalg.norm(base_vec)*np.linalg.norm(target_vec))
+    return 0.5 * 1 -(np.dot(base_vec, target_vec)/(np.linalg.norm(base_vec)*np.linalg.norm(target_vec)))
 
 class Tweet2Vec:
 
