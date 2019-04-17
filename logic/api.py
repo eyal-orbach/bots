@@ -3,7 +3,7 @@ import logic.similar_tweets as st
 import numpy as np
 import config.config as conf
 import json
-
+import logging
 
 tweets_vecs = None
 def init():
@@ -27,7 +27,8 @@ K_TWEETS = "kTweets"
 def tweet_similarity(data):
     obj = st.similarity_request_obj(data[K_TWEETS], data[ORIGIN_TEXT])
     raw_results = st.get_similar_tweets(obj)
-    return json.dumps(raw_results, default=str)
+    json_result = json.dumps(raw_results, default=str)
+    return json_result
 
 
 ORIGIN_USER_ID = "origin_user_id"

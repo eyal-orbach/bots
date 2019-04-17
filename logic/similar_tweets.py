@@ -2,7 +2,7 @@ import datetime
 import pickle
 from db.db_manager import *
 import numpy as np
-
+import logging
 from logic import dense_users, tweet2vec
 
 
@@ -56,8 +56,8 @@ def get_similar_tweets(request_obj:similarity_request_obj):
         dbtweet = Tweet.get(idx=index)
         if is_valid_date(dbtweet):
             dbuser = User.get(userid = dbtweet.userid)
-            user_dict={"name": dbuser.name, "tweeter_id":dbuser.userid}
-            tweet = {"tweetid": dbtweet.tweetid, "msg":dbtweet.msg, "time":dbtweet.time, "removed":False}
+            user_dict={"name": dbuser.name, "tweeter_id":str(dbuser.userid)}
+            tweet = {"tweetid": str(dbtweet.tweetid), "msg":dbtweet.msg, "time":dbtweet.time, "removed":False}
             user_dict["tweets"] = [tweet]
             final_users.append(user_dict)
             counter += 1

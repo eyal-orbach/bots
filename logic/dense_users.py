@@ -21,14 +21,11 @@ def get_dense_users(request_obj:density_request_obj, centroids, densitys):
         if dbuser.tweetsnum < MIN_TWEETS:
             continue
 
-        user_dict={"name": dbuser.name, "tweeter_id":dbuser.userid}
+        user_dict={"name": dbuser.name, "tweeter_id":str(dbuser.userid)}
         db_all_tweets = Tweet.select().where(Tweet.userid==dbuser.userid)
         user_tweets = []
         for db_tweet in db_all_tweets:
-            # if requests.head(TWITTER_STATUS_URL+str(db_tweet.tweetid)).status_code == 404:
-            #     tweet = {"tweetid": db_tweet.tweetid, "msg":db_tweet.msg, "time":db_tweet.time, "removed":True}
-            # else:
-            tweet = {"tweetid": db_tweet.tweetid, "msg":db_tweet.msg, "time":db_tweet.time, "removed":False}
+            tweet = {"tweetid": str(db_tweet.tweetid), "msg":db_tweet.msg, "time":db_tweet.time, "removed":False}
             user_tweets.append(tweet)
         user_dict["tweets"] = user_tweets
         final_users.append(user_dict)
