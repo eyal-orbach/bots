@@ -1,0 +1,37 @@
+
+#settingsContainer{
+    padding-left: 10px;
+}
+
+a.toollabel{
+    color: #5893b7;
+    padding-top: 13px;
+    vertical-align: bottom;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#show-results-button{
+    background-color: #1ca1f2;
+    left: 50%;
+    margin-left: -60px;
+    top: 80%;
+}
+
+#kUsersInput{
+    margin-left: 20px;
+    width: 40px;
+}
+
+#useridInput{
+    width: 150px;
+    height: 30px;
+}
+
+#textbox-container{
+    margin-left: 20px;
+}
+
+label.settings-container1{
+    margin-left: 20px;
+}

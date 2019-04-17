@@ -15,6 +15,7 @@ import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ResultsContainerComponent } from './results-container/results-container.component';
 import { TweetSimilaritySettingsComponent } from './tweet-similarity/tweet-similarity-settings/tweet-similarity-settings.component';
+import { BehaviourSettingsComponent } from './behaviour-similarity/behaviour-settings/behaviour-settings.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { TweetSimilaritySettingsComponent } from './tweet-similarity/tweet-simil
     HomeComponent,
     ResultsContainerComponent,
     TweetSimilaritySettingsComponent,
+    BehaviourSettingsComponent,
   ],
   imports: [
     BrowserModule,

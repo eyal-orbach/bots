@@ -1,3 +1,12 @@
-<p>
-  behaviour-similarity works!
-</p>
+<div style="height:100%; overflow: hidden;">
+  <p id=info>
+    This is the behaviour similarity module.<br>
+    Here you can search for users that had similar tweets to a given user in similar times.
+  </p>
+  <hr>
+  <app-behaviour-settings (resultsTrigger)=handleSettings($event) style="height:25%">
+  </app-behaviour-settings>
+  <br><br>
+  <hr>
+  <app-results-container [tweetsJson]="resultsJson" [resultsPlaceHolderStyle]="resultsState"></app-results-container>
+</div>

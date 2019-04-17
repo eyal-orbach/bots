@@ -12,6 +12,7 @@ const httpOptions = {
 
 var subject_density_api = '/bots/api/subjectdensity'
 var tweet_similarity_api = '/bots/api/tweetsimilarity'
+var behaviour_similarity_api = '/bots/api/behavioursimilarity'
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,11 @@ export class HebrewBotsServiceService {
 
   getSimilarTweets(setingsJson: string, updateResultsCallback) {
     var url = this.location.prepareExternalUrl(tweet_similarity_api);
+    this.callApi(setingsJson, updateResultsCallback, url);
+  }
+
+  getSimilarBehaviours(setingsJson: string, updateResultsCallback) {
+    var url = this.location.prepareExternalUrl(behaviour_similarity_api);
     this.callApi(setingsJson, updateResultsCallback, url);
   }
 
