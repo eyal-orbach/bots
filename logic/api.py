@@ -24,8 +24,9 @@ def subject_density(data, centroids, densitys):
 
 
 K_TWEETS = "kTweets"
+SIMILARITY_METHOD ="sim_method"
 def tweet_similarity(data):
-    obj = st.similarity_request_obj(data[K_TWEETS], data[ORIGIN_TEXT])
+    obj = st.similarity_request_obj(data[K_TWEETS], data[ORIGIN_TEXT], data[SIMILARITY_METHOD])
     raw_results = st.get_similar_tweets(obj)
     json_result = json.dumps(raw_results, default=str)
     return json_result

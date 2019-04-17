@@ -18,7 +18,7 @@ a.toollabel{
     background-color: #1ca1f2;
     left: 50%;
     margin-left: -60px;
-    top: 80%;
+    bottom: 20%;
 }
 
 #kTweetSelector{
@@ -32,4 +32,9 @@ a.toollabel{
 
 label.settings-container1{
     margin-left: 20px;
+}
+
+#dist-method-selector{
+    width: 200px;
+    padding-top:20px;
 }

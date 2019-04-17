@@ -11,7 +11,14 @@
 </textarea>
     </div>
   </div>
-  <div id=settingsContainer2 fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px">
+  <div id=settingsContainer2 fxLayout="column" fxLayout.xs="row" fxLayoutGap="30%">
+    <div id="dist-method-selector" fxLayout="column"  fxLayoutGap="5px">
+      <label>Similarity method</label>
+      <mat-select  [(value)]="distanceMethod">
+        <mat-option value="euclidean">euclidean distance</mat-option>
+        <mat-option value="cosine">cosine distance</mat-option>
+    </mat-select>
+    </div>
     <div id="button-container" fxLayout="row" fxLayoutGap="10px">
       <button mat-raised-button color="primary" id="show-results-button" (click)="showResults()">Show results</button>
     </div>
