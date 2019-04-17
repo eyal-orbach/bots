@@ -28,3 +28,10 @@ def tweet_similarity(data):
     obj = st.similarity_request_obj(data[K_TWEETS], data[ORIGIN_TEXT])
     raw_results = st.get_similar_tweets(obj)
     return json.dumps(raw_results, default=str)
+
+
+ORIGIN_USER_ID = "origin_user_id"
+def behavior_similrity(data):
+    obj = st.similarity_request_obj(data[K_USERS], data[ORIGIN_USER_ID])
+    raw_results = st.get_similar_tweets(obj)
+    return json.dumps(raw_results, default=str)
