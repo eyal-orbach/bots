@@ -1,123 +1,93 @@
-import datetime
-import pickle
-
+import config.config as conf
 import numpy as np
-
-from logic import dense_users
-
-
-#todo change logic to average between min distance from every tweet of origin user to any tweet of target user
+from logic.distance_functions import *
+from db.db_manager import *
 
 
-AMOUNT_OF_TWEETS_FACTOR = 2
+class behaviour_request_obj:
+    def __init__(self, k_tweets, userid, dist_method):
+        self.k_users= int(k_tweets)
+        self.userid = userid
+        self.dist_method = dist_method
 
-DIST = "dist"
+MIN_TWEETS = 5
+all_timed_tweets = None
+all_timed_tweets_vecs_magnitudes = None
+users_to_tweets = None
+dist_method = None
+def load_data():
+    global all_timed_tweets, all_timed_tweets_vecs_magnitudes, users_to_tweets
+    #load all time tweets
+    all_timed_tweets = np.load(conf.timed_tweets_file)
+    users_to_tweets = np.load(conf.users_to_tweets_file)
+    all_timed_tweets_vecs_magnitudes = np.linalg.norm(all_timed_tweets, axis=1)
 
-MATRIX = "matrix"
-
-TIMED_VECTOR = "timed_vector"
-
-TIME_DIMENSIONS = 4
-
-
-def dist_between_users(user_a, user_b):
-    accumelator = 0
-    if len(user_a[dense_users.TWEETS]) < len(user_b[dense_users.TWEETS]):
-        u1 = user_a
-        u2 = user_b
-    else:
-        u1 = user_b
-        u2 = user_a
-
-    min_tweets = len(u1[dense_users.TWEETS])
-
-
-    for atwt in u1[dense_users.TWEETS]:
-        vec = atwt[TIMED_VECTOR]
-        min_dist = 1-np.amax(u2[MATRIX].dot(vec/np.linalg.norm(vec)))
-        accumelator += min_dist
-
-    return float(accumelator) / (min_tweets ** AMOUNT_OF_TWEETS_FACTOR)
+def get_user_tweets_extended_vecs(userid):
+    #get_vecs_with_time
+    return []
 
 
+def get_users_min_distance_to_vec(vec):
+    all_tweets_distances = dist_method(vec, all_timed_tweets, all_timed_tweets_vecs_magnitudes)
+    users_min_distances = []
+    users_argmins = []
+    for user, twts_indices in users_to_tweets:
+        u_distances = np.take(all_tweets_distances, twts_indices)
+        users_min_distances.append(u_distances.min())
+        users_argmins.append(u_distances.argmin())
 
-
-
-def add_timed_vec(twt):
-    from logic.dense_users import min_timestamp, diff
-    time = float(twt[tweet2vec.DETAILS][1])
-    normalized_time = (time - min_timestamp) / diff
-    vec = twt[tweet2vec.VECTOR]
-    time_dims = np.ones(TIME_DIMENSIONS) * normalized_time
-    timed_vec = np.concatenate((vec, time_dims), axis=0)
-    twt[TIMED_VECTOR] = timed_vec
-    return twt
+    return users_min_distances, users_argmins
 
 
 
 
-def add_time_to_vectors(users):
-    for user in users.values():
-        timed_vecs = []
-        utwts = user[dense_users.TWEETS]
-        for i, twt in enumerate(utwts):
-            t = add_timed_vec(twt)
-            utwts[i] = t
-            vec =t[TIMED_VECTOR]
-            timed_vecs.append(vec/np.linalg.norm(vec))
-        user[MATRIX] = np.array(timed_vecs)
-    return users
+def get_distances_per_user(user_tweets_vecs):
+    users_distances = []
+    users_argmins = []
+    for vec in user_tweets_vecs:
+        users_min_distance_to_vec, users_argmin = get_users_min_distance_to_vec(vec)
+        users_distances.append(users_min_distance_to_vec)
+        users_argmins.append(users_argmin)
 
-def is_farther_from_base_user(u1, u2):
-    dist1 = dist_between_users(base_user, u1)
-    dist2 = dist_between_users(base_user, u2)
-    return -int(np.sign(dist1 - dist2))
-
-def get_top_k_similar_users(users, k):
-    sorted_users = sorted(users.items(), key=lambda x:x[1][DIST])
-    # sorted_users = sorted(users.items(), cmp = is_farther_from_base_user)
-    return sorted_users[:k]
-
-def print_top_similar_users_console(top_k_users, users):
-    for i, u in enumerate(top_k_users):
-        print("\n\n*********")
-        print("user number: %d\n" % i)
-        data = users[u[0]]
-        print("user name: %s\n" % u[0])
-        print("user dist: %f\n" % data[DIST])
-        print("---")
-        print("\ntweets:\n")
-        for t in data[dense_users.TWEETS]:
-            epoch = int(float(t[tweet2vec.DETAILS][1]))
-            ttime = datetime.datetime.fromtimestamp(epoch)
-            print("time: %s\n" % ttime)
-
-            print("tweet: " + t[tweet2vec.TWEET] + "\n")
+    #nparray?
+    return users_distances, users_argmins
 
 
-def add_dist_from_base_user(users):
-    for user in users:
-        dist = dist_between_users(base_user, users[user])
-        users[user][DIST] = dist
-    return users
+def calc_scores(user_ditances_arrays):
+    #sum per each user
+    return user_ditances_arrays
 
 
-if __name__ == '__main__':
-    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print("Started at %s\n" %(time))
-    twts = pickle.load(open(dense_users.twts_pkl_file, "rb"), encoding="latin1")
-    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print("loaded twts at %s\n" %(time))
-    users = dense_users.map_to_users(twts)
-    users = add_time_to_vectors(users)
-    global base_user
-    # base_user = users['lili2307li2307']
-    base_user = users['Vitaliko']
-    users = add_dist_from_base_user(users)
-    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print("manipulated data %s\n" %(time))
+def get_similar_behaviour_user_indices(userid, req_dist_method="eucleaden"):
+    global dist_method
+    dist_method = get_dist_method(req_dist_method)
+    user_tweets_vecs = get_user_tweets_extended_vecs(userid)
+    user_ditances_arrays, users_argmins = get_distances_per_user(user_tweets_vecs)
+    users_scores = calc_scores(user_ditances_arrays)
+    return  iter(np.argsort(users_scores)), users_argmins
 
-    top_close_users = get_top_k_similar_users(users, 30)
-    print_top_similar_users_console(top_close_users, users)
-    time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print("done %s\n" %(time))
+def get_similar_behaviour_users(request_obj:behaviour_request_obj):
+    sorted_user_indices, users_argmins = get_similar_behaviour_user_indices(request_obj.userid, request_obj.dist_method)
+    final_users = []
+    counter = 0
+    for index in sorted_user_indices:
+        dbuser = User.get(idx=index)
+        if dbuser.tweetsnum < MIN_TWEETS:
+            continue
+
+        close_tweets_indices = users_argmins[index]
+        user_dict={"name": dbuser.name, "tweeter_id":str(dbuser.userid)}
+        db_all_tweets = Tweet.select().where(Tweet.userid==dbuser.userid)
+        user_tweets = []
+        for db_tweet in db_all_tweets:
+            used_for_similarity = db_tweet.idx in close_tweets_indices
+            tweet = {"tweetid": str(db_tweet.tweetid), "msg":db_tweet.msg, "time":db_tweet.time, "used":used_for_similarity}
+            user_tweets.append(tweet)
+        user_dict["tweets"] = user_tweets
+        final_users.append(user_dict)
+        counter+=1
+        if counter >= request_obj.k_users:
+            return final_users
+
+    return final_users
+

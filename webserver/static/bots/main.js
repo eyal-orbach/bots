@@ -532,7 +532,7 @@ module.exports = "mat-sidenav-container {\n  width: 100% !important;\n  height: 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-toolbar color=\"warn\">\n  <mat-toolbar-row> \n    <button type=\"button\" aria-label=\"Toggle sidenav\" mat-icon-button (click)=\"drawer.toggle()\" color=\"primary\">\n      <mat-icon aria-label=\"Side nav toggle icon\">menu</mat-icon>\n    </button>\n    The Bots Finder\n  </mat-toolbar-row>\n</mat-toolbar>\n<mat-sidenav-container class=\"example-container\">\n  <mat-sidenav #drawer mode=\"side\" opened role=\"navigation\"  mode=\"side\"\n            opened=\"true\"\n            [fixedInViewport]=\"true\"\n            [fixedTopGap]=\"64\">\n    <mat-nav-list>\n      <a mat-list-item routerLink='/home'>Home</a>\n      <a mat-list-item routerLink='/density'>Subject Density</a>\n      <a mat-list-item routerLink='/behaviour'>Behaviour Similarity</a>\n      <a mat-list-item routerLink='/tweet'>Tweet Similarity</a>\n    </mat-nav-list>\n  </mat-sidenav>\n  <mat-sidenav-content>\n    <router-outlet></router-outlet>\n  </mat-sidenav-content>\n</mat-sidenav-container>"
+module.exports = "<mat-toolbar color=\"warn\">\n  <mat-toolbar-row> \n    <button type=\"button\" aria-label=\"Toggle sidenav\" mat-icon-button (click)=\"drawer.toggle()\" color=\"primary\">\n      <mat-icon aria-label=\"Side nav toggle icon\">menu</mat-icon>\n    </button>\n    The Bots Finder\n  </mat-toolbar-row>\n</mat-toolbar>\n<mat-sidenav-container class=\"example-container\">\n  <mat-sidenav #drawer mode=\"side\" opened role=\"navigation\"  mode=\"side\"\n            opened=\"true\"\n            [fixedInViewport]=\"true\"\n            [fixedTopGap]=\"64\">\n    <mat-nav-list>\n      <a mat-list-item routerLink='/home'>Home</a>\n      <a mat-list-item routerLink='/tweet'>Tweet Similarity</a>\n      <a mat-list-item routerLink='/density'>Subject Density</a>\n      <a mat-list-item routerLink='/behaviour'>Behaviour Similarity</a>\n    </mat-nav-list>\n  </mat-sidenav>\n  <mat-sidenav-content>\n    <router-outlet></router-outlet>\n  </mat-sidenav-content>\n</mat-sidenav-container>"
 
 /***/ }),
 
@@ -686,7 +686,7 @@ var DensitySettingsComponent = /** @class */ (function () {
     function DensitySettingsComponent() {
         this.resultsTrigger = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.originText = PROMPT_ORIGIN_TEXT;
-        this.k_users = 40;
+        this.k_users = 30;
         this.subjectProximity = 0.8;
     }
     DensitySettingsComponent.prototype.showResults = function () {
