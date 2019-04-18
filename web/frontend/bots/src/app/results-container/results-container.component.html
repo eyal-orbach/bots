@@ -9,7 +9,7 @@
   </mat-slide-toggle>
 </section>
 <div class="results_container">
-  <a [class]="resultsPlaceHolderStyle">results will show here</a>
+  <a [class]="resultsPlaceHolderStyle"><span>{{resultsPlaceholderText}}</span></a>
   <ng-container *ngFor="let user of tweetsJson">
     <div class="usercontainer">
       <div class="usernamebox">

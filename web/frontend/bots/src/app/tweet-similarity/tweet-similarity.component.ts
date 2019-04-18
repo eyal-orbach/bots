@@ -21,12 +21,17 @@ export class TweetSimilarityComponent implements OnInit {
     this.resultsState = RESULTS_STATE.LOADING;
     this.resultsJson = null;
     var setingsJson = JSON.stringify(evt);
-    this.botService.getSimilarTweets(setingsJson, (r) => { this.set_json(r) });
+    this.botService.getSimilarTweets(setingsJson, (r) => { this.set_json(r)}, (e)=>{this.handle_error(e)});
   }
 
   set_json(json) {
-    this.resultsJson = json
-    this.resultsState = RESULTS_STATE.LOADED
+    this.resultsJson = json;
+    this.resultsState = RESULTS_STATE.LOADED;
+  }
+
+  handle_error(e){
+    this.resultsState = RESULTS_STATE.ERROR;
+    console.log(e);
   }
 
   ngOnInit() {

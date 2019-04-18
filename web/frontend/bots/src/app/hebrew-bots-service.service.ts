@@ -25,27 +25,27 @@ export class HebrewBotsServiceService {
     this.httpClient = http;
    }
 
-  getSubjectDensityList(settingJson:string, updateResultsCallback) {
+  getSubjectDensityList(settingJson: string, updateResultsCallback, errorCallback) {
     var url = this.location.prepareExternalUrl(subject_density_api);
-    this.callApi(settingJson, updateResultsCallback, url);
+    this.callApi(settingJson, updateResultsCallback, errorCallback, url);
   }
 
 
-  getSimilarTweets(setingsJson: string, updateResultsCallback) {
+  getSimilarTweets(setingsJson: string, updateResultsCallback, errorCallback) {
     var url = this.location.prepareExternalUrl(tweet_similarity_api);
-    this.callApi(setingsJson, updateResultsCallback, url);
+    this.callApi(setingsJson, updateResultsCallback, errorCallback, url);
   }
 
-  getSimilarBehaviours(setingsJson: string, updateResultsCallback) {
+  getSimilarBehaviours(setingsJson: string, updateResultsCallback, errorCallback) {
     var url = this.location.prepareExternalUrl(behaviour_similarity_api);
-    this.callApi(setingsJson, updateResultsCallback, url);
+    this.callApi(setingsJson, updateResultsCallback, errorCallback, url);
   }
 
-  private callApi(settingJson: string, updateResultsCallback: any, url) {
+  private callApi(settingJson: string, updateResultsCallback: any, errorCallback, url) {
     this.httpClient.post(url, settingJson, httpOptions).subscribe(data => {
       console.log(data);
       updateResultsCallback(data);
-    });
+    }, e=>errorCallback(e));
   }
 
 

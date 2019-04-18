@@ -56,6 +56,22 @@ a.await-results{
     top: 20%;
 }
 
+
+a.error span{
+    display: none;
+}
+
+a.error::after{
+    margin-left: -200px;
+    text-align: center;
+    width: 300px;
+    position: relative;
+    left: 50%;
+    top: 20%;
+    color: crimson;
+    content: "Something went wrong. Please try again.";
+}
+
 a.load-results{
     margin-left: -150px;
     text-align: center;

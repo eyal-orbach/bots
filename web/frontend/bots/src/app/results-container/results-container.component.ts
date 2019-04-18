@@ -3,7 +3,8 @@ import { Component, OnInit, Input } from '@angular/core';
 export const RESULTS_STATE = {
   WAITING: 'await-results',
   LOADING: 'load-results',
-  LOADED: 'results-loaded'
+  LOADED: 'results-loaded',
+  ERROR: 'error'
 }
 
 @Component({
@@ -16,6 +17,7 @@ export class ResultsContainerComponent implements OnInit {
 
   @Input() tweetsJson: object;
   @Input() resultsPlaceHolderStyle: string;
+  resultsPlaceholderText = "results will show here"
   embeddTweets: Boolean = false;
 
   constructor() {
