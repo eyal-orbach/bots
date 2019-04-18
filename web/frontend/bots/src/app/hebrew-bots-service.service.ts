@@ -21,7 +21,7 @@ export class HebrewBotsServiceService {
 
   private httpClient: HttpClient;
 
-  constructor(private http: HttpClient, private location: Location) {
+  constructor(http: HttpClient, private location: Location) {
     this.httpClient = http;
    }
 
