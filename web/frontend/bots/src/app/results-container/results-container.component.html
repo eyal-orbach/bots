@@ -3,17 +3,21 @@
 </div>
 <section class="example-section">
   Text
-  <mat-slide-toggle class="example-margin" [checked]="embeddTweets"
+  <mat-slide-toggle color="primary"  [checked]="embeddTweets"
     (change)="embeddTweets = !embeddTweets">
     Embedded tweets
   </mat-slide-toggle>
+  <mat-paginator *ngIf="embeddTweets" [length]="usersAmount" [pageSize]="usersPerPage"  (page)="currPage = $event.pageIndex">
+  </mat-paginator>
 </section>
 <div class="results_container">
   <a [class]="resultsPlaceHolderStyle"><span>{{resultsPlaceholderText}}</span></a>
-  <ng-container *ngFor="let user of tweetsJson">
-    <div class="usercontainer">
-      <div class="usernamebox">
-        <a href="http://twitter.com/{{user.name}}" class="username"> {{user.name}} </a>
+  <ng-container *ngFor="let user of getXUsers()">
+    <div class="usercontainer" >
+      <div class="useralignmentbox">
+        <div class="usernamebox" class="userbox">
+          <a>user: <a href="http://twitter.com/{{user.name}}" class="username">{{user.name}} </a></a>
+        </div>
       </div>
       <div *ngFor="let tweet of user.tweets">
         <div class="tweetcontainer" *ngIf="embeddTweets">

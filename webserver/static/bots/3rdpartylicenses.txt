@@ -93,9 +93,13 @@ THE SOFTWARE.
 
 @angular/material/dialog
 
+@angular/material/form-field
+
 @angular/material/icon
 
 @angular/material/list
+
+@angular/material/paginator
 
 @angular/material/select
 
@@ -106,6 +110,8 @@ THE SOFTWARE.
 @angular/material/slider
 
 @angular/material/toolbar
+
+@angular/material/tooltip
 
 @angular/platform-browser
 MIT

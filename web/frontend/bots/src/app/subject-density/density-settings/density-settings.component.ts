@@ -17,7 +17,7 @@ export class DensitySettingsComponent implements OnInit {
   @Output() resultsTrigger: EventEmitter<Object> = new EventEmitter<Object>();
 
   originText: String = PROMPT_ORIGIN_TEXT
-  k_users: Number = 30;
+  k_users: Number = 20;
   subjectProximity: Number = 0.8;
 
   constructor() {   }

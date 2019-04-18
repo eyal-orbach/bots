@@ -4,15 +4,15 @@ import { NgxTweetModule } from "ngx-tweet";
 import {
     MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, 
     MatToolbarModule, MatSliderModule, MatInputModule, MatSlideToggleModule, MatDatepickerModule,
-    MatSelectModule
+    MatSelectModule, MatPaginatorModule
 } from '@angular/material';
 
 @NgModule({
     imports: [CommonModule, MatButtonModule, MatToolbarModule, MatNativeDateModule, MatIconModule, MatSidenavModule, 
         MatListModule, MatSliderModule, MatInputModule, NgxTweetModule, MatSlideToggleModule, MatDatepickerModule,
-        MatSelectModule],
+        MatSelectModule, MatPaginatorModule],
     exports: [CommonModule, MatButtonModule, MatToolbarModule, MatNativeDateModule, MatIconModule, MatSidenavModule, 
         MatListModule, MatSliderModule, MatInputModule, NgxTweetModule, MatSlideToggleModule, MatDatepickerModule,
-        MatSelectModule],
+        MatSelectModule, MatPaginatorModule],
 })
 export class CustomMaterialModule { }

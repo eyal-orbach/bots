@@ -13,9 +13,10 @@ import { DensitySettingsComponent } from './subject-density/density-settings/den
 import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
-import { ResultsContainerComponent } from './results-container/results-container.component';
+import { ResultsContainerComponent, MatPaginatorIntlUsers } from './results-container/results-container.component';
 import { TweetSimilaritySettingsComponent } from './tweet-similarity/tweet-similarity-settings/tweet-similarity-settings.component';
 import { BehaviourSettingsComponent } from './behaviour-similarity/behaviour-settings/behaviour-settings.component';
+import { MatPaginatorIntl } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,7 @@ import { BehaviourSettingsComponent } from './behaviour-similarity/behaviour-set
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [{ provide: MatPaginatorIntl, useClass: MatPaginatorIntlUsers }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
