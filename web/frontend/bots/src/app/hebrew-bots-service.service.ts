@@ -5,7 +5,7 @@ import { Location } from '@angular/common';
 
 const httpOptions = {
   headers: new HttpHeaders({
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json; charset=utf-8'
   })
 };
 
