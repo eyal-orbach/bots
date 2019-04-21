@@ -2,12 +2,11 @@
   <div id=settingsContainer1 fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px">
     <label class="settings-container1">Enter cutoff number for the list of returned users</label>
     <input matInput type="number" id="kUsersInput" [value]="kUsers" (change)="kUsers=$event.target.value">
-    <label class="settings-container1">Enter user's Twitter id <br>
-    (finding user's id by his user name can be done via sites like 
+    <label class="settings-container1">Enter user's Twitter Name or Twitter ID <br>
+    (finding user's id can be done via sites like 
     <a href="https://codeofaninja.com/tools/find-twitter-id">https://codeofaninja.com/tools/find-twitter-id</a> )</label>
     <div id="textbox-container" fxLayout="row" fxFlex=60px>
-      <input matInput id="useridInput" [value]="idUser" (change)="idUser=$event.target.value"
-      pattern="[0-9]*">
+      <input matInput id="useridInput" [value]="idUser" (change)="idUser=$event.target.value">
     </div>
   </div>
   <div id=settingsContainer2 fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px">

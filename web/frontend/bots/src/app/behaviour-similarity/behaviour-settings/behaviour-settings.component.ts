@@ -11,7 +11,7 @@ const ORIGIN_USER_ID = "origin_user_id"
 export class BehaviourSettingsComponent implements OnInit {
 
   kUsers: Number = 20;
-  idUser: Number = 1092588148163559424;
+  idUser = '909695270283292672';
   
   @Output() resultsTrigger: EventEmitter<Object> = new EventEmitter<Object>();
 

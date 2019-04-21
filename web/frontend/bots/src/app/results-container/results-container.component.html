@@ -21,10 +21,10 @@
       </div>
       <div *ngFor="let tweet of user.tweets">
         <div class="tweetcontainer" *ngIf="embeddTweets">
-          <ngx-tweet tweetId={{tweet.tweetid}}></ngx-tweet>
+            <ngx-tweet [class.emphasised_tweet]="tweet.used" tweetId={{tweet.tweetid}}></ngx-tweet>
         </div>
-        <div class="tweetcontainer" *ngIf="!embeddTweets">
-          <a href="http://twitter.com/user/status/{{tweet.tweetid}}">{{tweet.msg}}</a>
+        <div class="texttweetcontainer" *ngIf="!embeddTweets">
+            <a [class.emphasised_tweet_text]="tweet.used" href="http://twitter.com/user/status/{{tweet.tweetid}}">{{tweet.msg}}</a>
         </div>
       </div>
       <hr class="tweetseperator">

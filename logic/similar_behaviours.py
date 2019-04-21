@@ -57,8 +57,7 @@ def calc_scores(user_ditances_arrays):
     return user_ditances_arrays.transpose().sum(axis=1)
 
 
-def get_similar_behaviour_user_indices(userid):
-    user = User.get_or_none(userid=userid)
+def get_similar_behaviour_user_indices(user):
     if user is None:
         return [],[]
 
@@ -67,10 +66,26 @@ def get_similar_behaviour_user_indices(userid):
     users_scores = calc_scores(user_ditances_arrays)
     return  iter(np.argsort(users_scores)), users_argmins
 
+
+def get_user(userid):
+    user = None
+    if userid.isdigit():
+        user = User.get_or_none(userid=userid)
+
+    if user is None:
+        if userid[0] == "@":
+            name = userid[1:]
+        else:
+            name = userid
+        user = User.get_or_none(name=name)
+    return user
+
+
 def get_similar_behaviour_users(request_obj:behaviour_request_obj):
     global dist_method
     dist_method = get_dist_method(request_obj.dist_method)
-    sorted_user_indices, users_argmins = get_similar_behaviour_user_indices(request_obj.userid)
+    user = get_user(request_obj.userid)
+    sorted_user_indices, users_argmins = get_similar_behaviour_user_indices(user)
     final_users = []
     counter = 0
     for index in sorted_user_indices:

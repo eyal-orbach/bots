@@ -7,6 +7,11 @@
     position: relative;
 }
 
+.texttweetcontainer{
+    text-align: right;
+    position: relative;
+    padding: 3px;
+}
 .removed_label{
     top: 40px;
     position: relative;
@@ -113,8 +118,8 @@ a.results-loaded{
     box-align: center;
 }
 .useralignmentbox{
-      width: 100%;
-  text-align: center;
+    width: 100%;
+    text-align: center;
 }
 .userbox{
     background-color: #1ca1f21a;
@@ -129,4 +134,14 @@ a.results-loaded{
     margin-bottom: 30px;
     margin-top: 10px;
     border-radius: 7px;
+}
+
+.emphasised_tweet{
+    border: 2px dashed #ff5e5e66;
+    display: table;
+}
+
+.emphasised_tweet_text{
+    border: 2px dashed #ff5e5e66;
+    text-align: right;
 }
