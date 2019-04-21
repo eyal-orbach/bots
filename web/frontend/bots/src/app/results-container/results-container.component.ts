@@ -8,6 +8,7 @@ export const RESULTS_STATE = {
   WAITING: 'await-results',
   LOADING: 'load-results',
   LOADED: 'results-loaded',
+  EMPTY: 'empty',
   ERROR: 'error'
 }
 

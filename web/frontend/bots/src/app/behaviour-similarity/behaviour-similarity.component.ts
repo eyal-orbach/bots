@@ -10,7 +10,7 @@ import { HebrewBotsServiceService } from '../hebrew-bots-service.service';
 export class BehaviourSimilarityComponent implements OnInit {
 
   resultsState: string = RESULTS_STATE.WAITING;
-  resultsJson: object;
+  resultsJson;
   botService: HebrewBotsServiceService;
 
   constructor(botsService: HebrewBotsServiceService) {
@@ -25,8 +25,12 @@ export class BehaviourSimilarityComponent implements OnInit {
   }
 
   set_json(json) {
-    this.resultsJson = json
-    this.resultsState = RESULTS_STATE.LOADED
+    this.resultsJson = json;
+    if (this.resultsJson.length==0) {
+        this.resultsState = RESULTS_STATE.EMPTY;
+    } else {
+      this.resultsState = RESULTS_STATE.LOADED;
+    }
   }
 
   handle_error(e) {

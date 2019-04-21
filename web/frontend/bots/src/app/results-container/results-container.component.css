@@ -73,6 +73,20 @@ a.error::after{
     color: crimson;
     content: "Something went wrong. Please try again.";
 }
+a.empty span {
+    display: none;
+}
+
+a.empty::after{
+    margin-left: -200px;
+    text-align: center;
+    width: 300px;
+    position: relative;
+    left: 50%;
+    top: 20%;
+    color: crimson;
+    content: "No information for this id";
+}
 
 a.load-results{
     margin-left: -150px;

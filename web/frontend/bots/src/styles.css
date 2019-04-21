@@ -15,3 +15,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-accent .mat-slider-thumb, .mat-accent .mat-slider-thumb-label, .mat-accent .mat-slider-track-fill {
     background-color: #1ca1f2;
 }
+
+@font-face {
+  font-family: 'palanquin-regular';
+  src: url(/assets/fonts/palanquin-regular.ttf) format('truetype');
+}
+
+* {
+    font-family: 'palanquin-regular', 'arial', sans-serif;
+}

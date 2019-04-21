@@ -88,3 +88,12 @@ class Cosinecentroid(Model):
         super(Cosinecentroid, self).save(force_insert=True)
     class Meta:
         database = db
+
+class TimedTweetVec(Model):
+    idx = IntegerField(primary_key=True)
+    vec = BareField(adapt=adaptnp)
+
+    def save(self):
+        super(TimedTweetVec, self).save(force_insert=True)
+    class Meta:
+        database = db

@@ -27,7 +27,7 @@ def tweet_similarity():
     return HTTPResponse(code=200, body=results, headers=API_HEADERS)
 
 @route('/bots/api/behavioursimilarity', method=['POST'])
-def tweet_similarity():
+def behaviour_similarity():
     r = request
     data = r.json
     results = api.behavior_similrity(data)
