@@ -3,6 +3,7 @@ import numpy as np
 import pickle
 from logic.distance_functions import *
 from db.db_manager import *
+import logging
 
 
 class behaviour_request_obj:
@@ -18,9 +19,11 @@ users_to_tweets = None
 dist_method = None
 def load_data():
     global all_timed_tweets, all_timed_tweets_vecs_magnitudes, users_to_tweets
+    logging.debug("started loading sb data")
     all_timed_tweets = np.load(conf.timed_tweets_vecs_file)
     users_to_tweets = pickle.load(open(conf.users_to_tweets_pkl, "rb"))
     all_timed_tweets_vecs_magnitudes = np.linalg.norm(all_timed_tweets, axis=1)
+    logging.debug("finished loading sb data")
 
 def get_user_tweets_extended_vecs(user):
     tweets_idx = users_to_tweets[user.idx]
@@ -31,11 +34,12 @@ def get_users_min_distance_to_vec(vec):
     all_tweets_distances = dist_method(vec, all_timed_tweets, all_timed_tweets_vecs_magnitudes)
     users_min_distances = []
     users_argmins = []
+    logging.debug("sb - iterating over all users")
     for user, twts_indices in users_to_tweets.items():
         u_distances = np.take(all_tweets_distances, twts_indices)
         users_min_distances.append(u_distances.min())
         users_argmins.append(twts_indices[u_distances.argmin()])
-
+    logging.debug("sb - finished iterating")
     return users_min_distances, users_argmins
 
 
@@ -45,7 +49,9 @@ def get_distances_per_user(user_tweets_vecs):
     users_distances = []
     users_argmins = []
     for vec in user_tweets_vecs:
+        logging.debug("sb - started origin user tweet")
         users_min_distance_to_vec, users_argmin = get_users_min_distance_to_vec(vec)
+        logging.debug("sb - got distances")
         users_distances.append(np.array(users_min_distance_to_vec))
         users_argmins.append(np.array(users_argmin))
 
@@ -63,7 +69,9 @@ def get_similar_behaviour_user_indices(user):
 
     user_tweets_vecs = get_user_tweets_extended_vecs(user)
     user_ditances_arrays, users_argmins = get_distances_per_user(user_tweets_vecs)
+    logging.debug("sb - got all users distances arrays")
     users_scores = calc_scores(user_ditances_arrays)
+    logging.debug("sb - calculated scores")
     return  iter(np.argsort(users_scores)), users_argmins
 
 
@@ -85,7 +93,9 @@ def get_similar_behaviour_users(request_obj:behaviour_request_obj):
     global dist_method
     dist_method = get_dist_method(request_obj.dist_method)
     user = get_user(request_obj.userid)
+    logging.debug("sb- loaded user")
     sorted_user_indices, users_argmins = get_similar_behaviour_user_indices(user)
+    logging.debug("sb- got all sorted users")
     final_users = []
     counter = 0
     for index in sorted_user_indices:
