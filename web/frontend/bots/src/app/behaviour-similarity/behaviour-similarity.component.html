@@ -1,7 +1,9 @@
 <div style="height:125%;">
   <p class="module-info">
-    This is the behaviour similarity module.<br>
-    Here you can search for users that had similar tweets to a given user in similar times.
+    Here you can search for users that had similar tweets to a given user in similar times. <br>
+    <span class="technical">Technical: Tweets vecs are modified here to include k dimensions of the tweet's timestamp value.
+      users are then ranked by the sum of their tweets minimal distances to the given user's tweets.
+    </span>
   </p>
   <hr>
   <app-behaviour-settings (resultsTrigger)=handleSettings($event) style="height:25%">

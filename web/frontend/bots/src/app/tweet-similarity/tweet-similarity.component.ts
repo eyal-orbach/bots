@@ -34,6 +34,8 @@ export class TweetSimilarityComponent implements OnInit {
     console.log(e);
   }
 
+  
+
   ngOnInit() {
   }
 

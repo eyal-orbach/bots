@@ -38,7 +38,7 @@ export class ResultsContainerComponent implements OnInit {
 
   @Input() resultsPlaceHolderStyle: string;
   resultsPlaceholderText = "results will show here"
-  embeddTweets: Boolean = false;
+  embeddTweets: Boolean = true;
 
   usersAmount = 0;
   usersPerPage = 10;
