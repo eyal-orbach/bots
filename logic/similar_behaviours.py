@@ -38,14 +38,8 @@ def load_data():
     logging.debug("finished loading sb data")
 
 def get_user_tweets_extended_vecs(user, startdate, enddate):
-    tweets_idxes = users_to_tweets[user.idx]
-    user_timed_tweets=[]
-    for tweet_idx in tweets_idxes:
-        tweet = Tweet.get(idx=tweet_idx)
-        if tweet.time > startdate and tweet.time < enddate:
-            user_timed_tweets.append(all_timed_tweets[tweet_idx])
-
-    return user_timed_tweets
+    selectTweets = Tweet.select(Tweet.idx).where((Tweet.userid==user.userid)&(Tweet.time > startdate) & (Tweet.time < enddate))
+    return [all_timed_tweets[t.idx] for t in selectTweets]
 
 
 def get_users_min_distance_to_vec(vec):
