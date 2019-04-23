@@ -6,6 +6,8 @@ from logic.distance_functions import *
 from db.db_manager import *
 import logging
 import datetime
+import multiprocessing
+from errors.UserError import UserError
 
 MAX_TWEETS = 10
 
@@ -24,6 +26,9 @@ all_timed_tweets = None
 all_timed_tweets_vecs_magnitudes = None
 users_to_tweets = None
 dist_method = None
+
+
+
 def load_data():
     global all_timed_tweets, all_timed_tweets_vecs_magnitudes, users_to_tweets
     logging.debug("started loading sb data")
@@ -57,12 +62,11 @@ def get_users_min_distance_to_vec(vec):
 
 
 
-
 def get_distances_per_user(user_tweets_vecs):
     users_distances = []
     users_argmins = []
     nuser_tweets_vecs = np.array(user_tweets_vecs)
-    c = np.apply_along_axis(get_mins_per_vec, -1, nuser_tweets_vecs)
+    c = parallel_apply_along_axis(get_mins_per_vec, 1, nuser_tweets_vecs)
     [dists, indices] = np.split(c,2,axis=1)
     amount_of_original_user_tweets = len(user_tweets_vecs)
     amount_of_users = len(users_to_tweets)
@@ -75,6 +79,8 @@ def get_mins_per_vec( vec):
     logging.debug("sb - got distances")
     return np.array([np.array(users_min_distance_to_vec),np.array(users_argmin)])
 
+
+vf = np.vectorize(get_mins_per_vec)
 
 def calc_scores(user_ditances_arrays):
     #sum per each user
@@ -106,14 +112,14 @@ def get_user(userid):
 def get_tweet_vecs(req_object):
     user = get_user(req_object.userid)
     if user is None:
-        raise ValueError('User not found in database')
+        raise UserError('User not found in database')
 
     user_tweets_vecs = get_user_tweets_extended_vecs(user, req_object.startDate, req_object.endDate)
     if len(user_tweets_vecs) == 0:
-        raise ValueError('User has no tweets in this time range')
+        raise UserError('User has no tweets in this time range')
 
     if len(user_tweets_vecs) > MAX_TWEETS:
-        raise ValueError('User has too many tweets in this time range (limit is '+str(MAX_TWEETS)+')')
+        raise UserError('User has too many tweets in this time range (limit is '+str(MAX_TWEETS)+')')
 
     return user_tweets_vecs
 
@@ -163,4 +169,42 @@ def get_similar_behaviour_users(request_obj:behaviour_request_obj):
         final_users_dict[rt.user.idx] = user_dict
 
     return [final_users_dict[k] for k in k_indics]
+
+def unpacking_apply_along_axis(p):
+    (func1d, axis, arr, args, kwargs) = p
+    """
+    Like numpy.apply_along_axis(), but and with arguments in a tuple
+    instead.
+
+    This function is useful with multiprocessing.Pool().map(): (1)
+    map() only handles functions that take a single argument, and (2)
+    this function can generally be imported from a module, as required
+    by map().
+    """
+    return np.apply_along_axis(func1d, 1, arr, *args, **kwargs)
+
+def parallel_apply_along_axis(func1d, axis, arr, *args, **kwargs):
+    """
+    Like numpy.apply_along_axis(), but takes advantage of multiple
+    cores.
+    """
+    # Effective axis where apply_along_axis() will be applied by each
+    # worker (any non-zero axis number would work, so as to allow the use
+    # of `np.array_split()`, which is only done on axis 0):
+    effective_axis = 1 if axis == 0 else axis
+    if effective_axis != axis:
+        arr = arr.swapaxes(axis, effective_axis)
+
+
+    # Chunks for the mapping (only a few chunks):
+    chunks = [(func1d, 0, sub_arr, args, kwargs)
+              for sub_arr in np.array_split(arr, len(arr), 0)]
+
+    pool = multiprocessing.Pool()
+    individual_results = pool.map(unpacking_apply_along_axis, chunks)
+    # Freeing the workers:
+    pool.close()
+    pool.join()
+
+    return np.concatenate(individual_results)
 

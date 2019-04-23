@@ -3,6 +3,7 @@ import logic.similar_tweets as st
 import logic.similar_behaviours as sb
 import numpy as np
 import config.config as conf
+from errors.UserError import UserError
 import json
 import logging
 
@@ -41,6 +42,6 @@ def behavior_similrity(data):
         obj = sb.behaviour_request_obj(data[K_USERS], data[ORIGIN_USER_ID], data[START_DATE], data[END_DATE])
         raw_results = sb.get_similar_behaviour_users(obj)
         return json.dumps(raw_results, default=str)
-    except ValueError as err:
+    except UserError as err:
         return json.dumps({"error": str(err)}, default=str)
 
