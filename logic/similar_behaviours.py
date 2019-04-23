@@ -128,7 +128,8 @@ def get_similar_behaviour_users(request_obj:behaviour_request_obj):
 
         close_tweets_indices = [users_argmins[v][index] for v in range(len(users_argmins))]
         user_dict={"name": dbuser.name, "tweeter_id":str(dbuser.userid)}
-        db_all_tweets = Tweet.select().where(Tweet.userid == dbuser.userid)
+        db_all_tweets = Tweet.select().where((Tweet.userid == dbuser.userid) & (Tweet.time > request_obj.startDate) &
+                                             (Tweet.time < request_obj.endDate))
         user_tweets = []
         for db_tweet in db_all_tweets:
             used_for_similarity = db_tweet.idx in close_tweets_indices
