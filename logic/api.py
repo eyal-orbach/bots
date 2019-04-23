@@ -42,5 +42,5 @@ def behavior_similrity(data):
         raw_results = sb.get_similar_behaviour_users(obj)
         return json.dumps(raw_results, default=str)
     except ValueError as err:
-        return json.dumps({"error" : str(err)})
+        return json.dumps({"error": str(err)}, default=str)
 

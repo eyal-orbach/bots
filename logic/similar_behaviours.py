@@ -124,16 +124,20 @@ def get_similar_behaviour_users(request_obj:behaviour_request_obj):
 
     k_indics = list(itertools.islice(sorted_user_indices, request_obj.k_users))
 
+    all_close_tweets_idx = []
     close_tweets_indices = {}
     for uidx in k_indics:
         indices_set = set()
         for v in range(len(users_argmins)):
-            indices_set.add(users_argmins[v][uidx])
+            tidx = users_argmins[v][uidx]
+            indices_set.add(tidx)
+            all_close_tweets_idx.append(tidx)
         close_tweets_indices[uidx] = indices_set
     logging.debug("mapped used tweets")
 
 
-    releventTweets = Tweet.select(User.name, User.userid, User.idx, Tweet.tweetid, Tweet.msg, Tweet.time, Tweet.idx).join(User, on=(User.userid==Tweet.userid)).where((User.idx << k_indics) & (Tweet.time>request_obj.startDate) & (Tweet.time < request_obj.endDate ))
+    releventTweets = Tweet.select(User.name, User.userid, User.idx, Tweet.tweetid, Tweet.msg, Tweet.time, Tweet.idx)\
+        .join(User, on=(User.userid==Tweet.userid)).where((User.idx << k_indics) & (Tweet.time>request_obj.startDate) & (Tweet.time < request_obj.endDate) & (Tweet.idx << all_close_tweets_idx))
     logging.debug("loaded relevanttweets")
     print("loaded relevanttweets")
     print(datetime.datetime.now())
