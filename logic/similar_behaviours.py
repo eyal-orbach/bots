@@ -113,6 +113,7 @@ def get_tweet_vecs(req_object):
         raise UserError('User has no tweets in this time range')
 
     if len(user_tweets_vecs) > MAX_TWEETS:
+        logging.debug("user has %d" % len(user_tweets_vecs))
         raise UserError('User has too many tweets in this time range (limit is '+str(MAX_TWEETS)+')')
 
     return user_tweets_vecs
