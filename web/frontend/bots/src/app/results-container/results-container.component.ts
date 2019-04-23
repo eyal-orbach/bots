@@ -11,7 +11,8 @@ export const RESULTS_STATE = {
   LOADING: 'load-results',
   LOADED: 'results-loaded',
   EMPTY: 'empty',
-  ERROR: 'error'
+  ERROR: 'error',
+  USER_ERROR: 'user-error'
 }
 
 @Component({
@@ -86,7 +87,7 @@ export class ResultsContainerComponent implements OnInit{
   handleError(errorMsg: string) {
     this._tweetsJson = null;
     this.resultsPlaceholderText = errorMsg;
-    this.resultsPlaceHolderStyle = "user-error"
+    this.resultsPlaceHolderStyle = RESULTS_STATE.USER_ERROR;
   }
 
   constructor() {

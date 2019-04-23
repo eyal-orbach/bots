@@ -31,6 +31,9 @@ export class SubjectDensityComponent implements OnInit {
   set_json(json) {
     this.resultsState = RESULTS_STATE.LOADED;
     this.resultsJson = json;
+    if (json.hasOwnProperty("error")) {
+      this.resultsState = RESULTS_STATE.USER_ERROR;
+    }
   }
 
   handle_error(e) {
