@@ -26,14 +26,10 @@ export class BehaviourSimilarityComponent implements OnInit {
 
   set_json(json) {
     this.resultsJson = json;
-    if (this.resultsJson.length==0) {
-        this.resultsState = RESULTS_STATE.EMPTY;
-    } else {
-      this.resultsState = RESULTS_STATE.LOADED;
-    }
   }
 
   handle_error(e) {
+    this.resultsJson=null;
     this.resultsState = RESULTS_STATE.ERROR;
     console.log(e);
   }

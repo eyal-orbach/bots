@@ -4,13 +4,19 @@ import pickle
 from logic.distance_functions import *
 from db.db_manager import *
 import logging
+import datetime
+
+MAX_TWEETS = 10
 
 
 class behaviour_request_obj:
-    def __init__(self, k_tweets, userid, dist_method="euclidean"):
+    def __init__(self, k_tweets, userid, startdate, enddate, dist_method="euclidean"):
         self.k_users= int(k_tweets)
         self.userid = userid
         self.dist_method = dist_method
+        self.startDate = datetime.datetime.fromtimestamp(startdate)
+        self.endDate = datetime.datetime.fromtimestamp(enddate)
+
 
 MIN_TWEETS = 5
 all_timed_tweets = None
@@ -25,9 +31,15 @@ def load_data():
     all_timed_tweets_vecs_magnitudes = np.linalg.norm(all_timed_tweets, axis=1)
     logging.debug("finished loading sb data")
 
-def get_user_tweets_extended_vecs(user):
-    tweets_idx = users_to_tweets[user.idx]
-    return [all_timed_tweets[idx] for idx in tweets_idx]
+def get_user_tweets_extended_vecs(user, startdate, enddate):
+    tweets_idxes = users_to_tweets[user.idx]
+    user_timed_tweets=[]
+    for tweet_idx in tweets_idxes:
+        tweet = Tweet.get(idx=tweet_idx)
+        if tweet.time > startdate and tweet.time < enddate:
+            user_timed_tweets.append(all_timed_tweets[tweet_idx])
+
+    return user_timed_tweets
 
 
 def get_users_min_distance_to_vec(vec):
@@ -63,11 +75,7 @@ def calc_scores(user_ditances_arrays):
     return user_ditances_arrays.transpose().sum(axis=1)
 
 
-def get_similar_behaviour_user_indices(user):
-    if user is None:
-        return [],[]
-
-    user_tweets_vecs = get_user_tweets_extended_vecs(user)
+def get_similar_behaviour_user_indices(user_tweets_vecs, startdate, enddate):
     user_ditances_arrays, users_argmins = get_distances_per_user(user_tweets_vecs)
     logging.debug("sb - got all users distances arrays")
     users_scores = calc_scores(user_ditances_arrays)
@@ -89,12 +97,27 @@ def get_user(userid):
     return user
 
 
+def get_tweet_vecs(req_object):
+    user = get_user(req_object.userid)
+    if user is None:
+        raise ValueError('User not found in database')
+
+    user_tweets_vecs = get_user_tweets_extended_vecs(user, req_object.startDate, req_object.endDate)
+    if len(user_tweets_vecs) == 0:
+        raise ValueError('User has no tweets in this time range')
+
+    if len(user_tweets_vecs) > MAX_TWEETS:
+        raise ValueError('User has too many tweets in this time range (limit is '+str(MAX_TWEETS)+')')
+
+    return user_tweets_vecs
+
+
 def get_similar_behaviour_users(request_obj:behaviour_request_obj):
     global dist_method
     dist_method = get_dist_method(request_obj.dist_method)
-    user = get_user(request_obj.userid)
+    user_tweets_vecs = get_tweet_vecs(request_obj)
     logging.debug("sb- loaded user")
-    sorted_user_indices, users_argmins = get_similar_behaviour_user_indices(user)
+    sorted_user_indices, users_argmins = get_similar_behaviour_user_indices(user_tweets_vecs, request_obj.startDate, request_obj.endDate)
     logging.debug("sb- got all sorted users")
     final_users = []
     counter = 0

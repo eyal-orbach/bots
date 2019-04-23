@@ -28,16 +28,16 @@ export class SubjectDensityComponent implements OnInit {
     var setingsJson = JSON.stringify(evt) ;
     this.botService.getSubjectDensityList(setingsJson, (r)=>{this.set_json(r)}, (e)=>{this.handle_error(e)} );
   }
-
-  set_json(json){
-    this.resultsJson = json
-    this.resultsState = RESULTS_STATE.LOADED
+  set_json(json) {
+    this.resultsJson = json;
   }
-  
+
   handle_error(e) {
+    this.resultsJson = null;
     this.resultsState = RESULTS_STATE.ERROR;
     console.log(e);
   }
+  
   ngOnInit() {
   }
 

@@ -26,14 +26,13 @@ export class TweetSimilarityComponent implements OnInit {
 
   set_json(json) {
     this.resultsJson = json;
-    this.resultsState = RESULTS_STATE.LOADED;
   }
 
-  handle_error(e){
+  handle_error(e) {
+    this.resultsJson = null;
     this.resultsState = RESULTS_STATE.ERROR;
     console.log(e);
   }
-
   
 
   ngOnInit() {

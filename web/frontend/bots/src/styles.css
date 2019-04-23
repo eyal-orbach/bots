@@ -26,7 +26,7 @@ body { margin: 0; font-family: 'palanquin-regular', "Helvetica Neue", sans-serif
 
 @font-face {
   font-family: 'palanquin-regular';
-  src: url(/assets/fonts/palanquin-regular.ttf) format('truetype');
+  src: url(/assets/fonts/palanquin/palanquin-regular.ttf) format('truetype');
 }
 
 * {

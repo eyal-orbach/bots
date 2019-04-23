@@ -34,7 +34,13 @@ def tweet_similarity(data):
 
 
 ORIGIN_USER_ID = "origin_user_id"
+START_DATE="start_date"
+END_DATE = "end_date"
 def behavior_similrity(data):
-    obj = sb.behaviour_request_obj(data[K_USERS], data[ORIGIN_USER_ID])
-    raw_results = sb.get_similar_behaviour_users(obj)
-    return json.dumps(raw_results, default=str)
+    try:
+        obj = sb.behaviour_request_obj(data[K_USERS], data[ORIGIN_USER_ID], data[START_DATE], data[END_DATE])
+        raw_results = sb.get_similar_behaviour_users(obj)
+        return json.dumps(raw_results, default=str)
+    except ValueError as err:
+        return json.dumps({"error" : str(err)})
+

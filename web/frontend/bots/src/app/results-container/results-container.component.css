@@ -64,6 +64,19 @@ a.await-results{
 }
 
 
+a.user-error{
+    color: red;
+    margin-left: -150px;
+    text-align: center;
+    width: 300px;
+    position: relative;
+    left: 50%;
+    top: 20%;
+    display: inline-block;
+}
+
+
+
 a.error span{
     display: none;
 }

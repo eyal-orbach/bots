@@ -9,7 +9,20 @@
       <input matInput id="useridInput" [value]="idUser" (change)="idUser=$event.target.value">
     </div>
   </div>
-  <div id=settingsContainer2 fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px">
-    <button mat-raised-button color="primary" id="show-results-button" (click)="showResults()">Show results</button>
+  <div id=settingsContainer2 fxLayout="column" fxLayout.xs="row" fxLayoutGap="30px">
+    <a>Pick start and end dates</a>
+    <div id="datespicker" fxLayout="row" fxLayoutGap="20px">
+      <input matInput [matDatepicker]="pickerstart" placeholder="start date" [value]="startDate" [max]="endDate"
+      (dateChange)="startDate=$event.value">
+      <mat-datepicker-toggle matSuffix [for]="pickerstart"></mat-datepicker-toggle>
+      <mat-datepicker #pickerstart></mat-datepicker>
+      <input matInput [matDatepicker]="pickerend" placeholder="end date" [value]="endDate" [min]="startDate" 
+      (dateChange)="endDate=$event.value">
+      <mat-datepicker-toggle matSuffix [for]="pickerend"></mat-datepicker-toggle>
+      <mat-datepicker #pickerend></mat-datepicker>
+    </div>
+    <div>
+      <button mat-raised-button color="primary" id="show-results-button" (click)="showResults()">Show results</button>
+    </div>
   </div>
 </div>

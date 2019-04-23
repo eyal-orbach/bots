@@ -20,15 +20,28 @@ export const RESULTS_STATE = {
 
 export class ResultsContainerComponent implements OnInit {
 
+
   private _tweetsJson = null;
   
   @Input() 
   set tweetsJson(tweetsJson){
-    this._tweetsJson = tweetsJson;
     
-    if (this._tweetsJson != null){
+    if (tweetsJson != null){
+      if (tweetsJson.hasOwnProperty("error")){
+        this.handleError(tweetsJson["error"])
+        return;
+      }
+
+      if (tweetsJson.length == 0) {
+        this.resultsPlaceHolderStyle = RESULTS_STATE.EMPTY;
+        return
+      }
+
+      this._tweetsJson = tweetsJson;
+      this.resultsPlaceHolderStyle = RESULTS_STATE.LOADED
       this.usersAmount = this._tweetsJson.length;
     } else {
+      this._tweetsJson = tweetsJson;
       this.usersAmount = 0;
     }
     this.currPage = 0;
@@ -54,6 +67,12 @@ export class ResultsContainerComponent implements OnInit {
     var start = this.currPage * this.usersPerPage;
     var end = start + this.usersPerPage;
     return this._tweetsJson.slice(start, end);
+  }
+
+  handleError(errorMsg: string) {
+    this._tweetsJson = null;
+    this.resultsPlaceholderText = errorMsg;
+    this.resultsPlaceHolderStyle = "user-error"
   }
 
   constructor() {
