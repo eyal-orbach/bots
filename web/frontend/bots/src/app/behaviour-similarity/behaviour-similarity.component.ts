@@ -9,7 +9,7 @@ import { HebrewBotsServiceService } from '../hebrew-bots-service.service';
 })
 export class BehaviourSimilarityComponent implements OnInit {
 
-  resultsState: string = RESULTS_STATE.WAITING;
+  public resultsState = RESULTS_STATE.WAITING;
   resultsJson;
   botService: HebrewBotsServiceService;
 
@@ -18,13 +18,14 @@ export class BehaviourSimilarityComponent implements OnInit {
   }
 
   handleSettings(evt) {
-    this.resultsState = RESULTS_STATE.LOADING;
     this.resultsJson = null;
+    this.resultsState = RESULTS_STATE.LOADING;
     var setingsJson = JSON.stringify(evt);
     this.botService.getSimilarBehaviours(setingsJson, (r) => { this.set_json(r) }, (e) => { this.handle_error(e) });
   }
 
   set_json(json) {
+    this.resultsState = RESULTS_STATE.LOADED
     this.resultsJson = json;
   }
 

@@ -1,5 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {
+  Component, OnInit, Input, Output} from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material';
+import { forEach } from '@angular/router/src/utils/collection';
 export class MatPaginatorIntlUsers extends MatPaginatorIntl {
   itemsPerPageLabel = 'Users per page';
 }
@@ -18,14 +20,13 @@ export const RESULTS_STATE = {
   styleUrls: ['./results-container.component.css']
 })
 
-export class ResultsContainerComponent implements OnInit {
+export class ResultsContainerComponent implements OnInit{
 
 
   private _tweetsJson = null;
-  
+
   @Input() 
-  set tweetsJson(tweetsJson){
-    
+  set tweetsJson(tweetsJson){   
     if (tweetsJson != null){
       if (tweetsJson.hasOwnProperty("error")){
         this.handleError(tweetsJson["error"])
@@ -48,8 +49,21 @@ export class ResultsContainerComponent implements OnInit {
   }
 
 
+  private _resultsPlaceHolderStyle: string;
 
-  @Input() resultsPlaceHolderStyle: string;
+  @Input()
+  set resultsPlaceHolderStyle(resultsPlaceHolderStyle) {
+    if (resultsPlaceHolderStyle == RESULTS_STATE.LOADING || resultsPlaceHolderStyle == RESULTS_STATE.WAITING) {
+      this.resultsPlaceholderText = "results will show here"
+    }
+    this._resultsPlaceHolderStyle = resultsPlaceHolderStyle;
+  }
+
+ 
+  get resultsPlaceHolderStyle(){return this._resultsPlaceHolderStyle;}
+
+
+
   resultsPlaceholderText = "results will show here"
   embeddTweets: Boolean = true;
 
@@ -81,5 +95,4 @@ export class ResultsContainerComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }

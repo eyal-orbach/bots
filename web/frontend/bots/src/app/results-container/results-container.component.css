@@ -53,7 +53,7 @@ a.username{
     margin-top: 2px; 
 }
 
-a.await-results{
+.await-results{
     color: #89959c;
     margin-left: -150px;
     text-align: center;
@@ -124,7 +124,7 @@ a.load-results{
 }
 
 a.results-loaded{
-    display: none;
+    visibility: hidden;
 }
 
 .usercontainer{

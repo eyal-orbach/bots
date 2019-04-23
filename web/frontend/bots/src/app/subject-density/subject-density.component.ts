@@ -23,12 +23,13 @@ export class SubjectDensityComponent implements OnInit {
   }
 
   handleSettings(evt) {
-    this.resultsState = RESULTS_STATE.LOADING;
     this.resultsJson = null;
+    this.resultsState = RESULTS_STATE.LOADING;
     var setingsJson = JSON.stringify(evt) ;
     this.botService.getSubjectDensityList(setingsJson, (r)=>{this.set_json(r)}, (e)=>{this.handle_error(e)} );
   }
   set_json(json) {
+    this.resultsState = RESULTS_STATE.LOADED;
     this.resultsJson = json;
   }
 
@@ -37,7 +38,7 @@ export class SubjectDensityComponent implements OnInit {
     this.resultsState = RESULTS_STATE.ERROR;
     console.log(e);
   }
-  
+
   ngOnInit() {
   }
 
