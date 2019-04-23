@@ -61,14 +61,19 @@ def get_users_min_distance_to_vec(vec):
 def get_distances_per_user(user_tweets_vecs):
     users_distances = []
     users_argmins = []
-    for vec in user_tweets_vecs:
-        logging.debug("sb - started origin user tweet")
-        users_min_distance_to_vec, users_argmin = get_users_min_distance_to_vec(vec)
-        logging.debug("sb - got distances")
-        users_distances.append(np.array(users_min_distance_to_vec))
-        users_argmins.append(np.array(users_argmin))
+    nuser_tweets_vecs = np.array(user_tweets_vecs)
+    c = np.apply_along_axis(get_mins_per_vec, -1, nuser_tweets_vecs)
+    [dists, indices] = np.split(c,2,axis=1)
+    amount_of_original_user_tweets = len(user_tweets_vecs)
+    amount_of_users = len(users_to_tweets)
+    return dists.reshape(amount_of_original_user_tweets, amount_of_users), \
+           indices.reshape(amount_of_original_user_tweets, amount_of_users)
 
-    return np.array(users_distances), np.array(users_argmins)
+def get_mins_per_vec( vec):
+    logging.debug("sb - started origin user tweet")
+    users_min_distance_to_vec, users_argmin = get_users_min_distance_to_vec(vec)
+    logging.debug("sb - got distances")
+    return np.array([np.array(users_min_distance_to_vec),np.array(users_argmin)])
 
 
 def calc_scores(user_ditances_arrays):
