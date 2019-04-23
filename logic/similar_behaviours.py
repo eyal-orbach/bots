@@ -1,5 +1,6 @@
 import config.config as conf
 import numpy as np
+import itertools
 import pickle
 from logic.distance_functions import *
 from db.db_manager import *
@@ -121,25 +122,36 @@ def get_similar_behaviour_users(request_obj:behaviour_request_obj):
     logging.debug("sb- got all sorted users")
     final_users = []
     counter = 0
-    for index in sorted_user_indices:
-        dbuser = User.get(idx=index)
-        if dbuser.tweetsnum < MIN_TWEETS:
-            continue
 
-        close_tweets_indices = [users_argmins[v][index] for v in range(len(users_argmins))]
-        user_dict={"name": dbuser.name, "tweeter_id":str(dbuser.userid)}
-        db_all_tweets = Tweet.select().where((Tweet.userid == dbuser.userid) & (Tweet.time > request_obj.startDate) &
-                                             (Tweet.time < request_obj.endDate))
-        user_tweets = []
-        for db_tweet in db_all_tweets:
-            used_for_similarity = db_tweet.idx in close_tweets_indices
-            tweet = {"tweetid": str(db_tweet.tweetid), "msg":db_tweet.msg, "time":db_tweet.time, "used":used_for_similarity}
-            user_tweets.append(tweet)
+    k_indics = list(itertools.islice(sorted_user_indices, request_obj.k_users))
+
+
+    releventTweets = Tweet.select(User.name, User.userid, User.idx, Tweet.tweetid, Tweet.msg, Tweet.time, Tweet.idx).join(User, on=(User.userid==Tweet.userid)).where((User.idx << k_indics) & (Tweet.time>request_obj.startDate) & (Tweet.time < request_obj.endDate ))
+
+    for rt in releventTweets:
+        print(rt)
+
+    logging.debug("loaded relevanttweets")
+
+    close_tweets_indices = {}
+    for uidx in k_indics:
+        indices_set = set()
+        for v in range(len(users_argmins)):
+            indices_set.add(users_argmins[v][uidx])
+        close_tweets_indices[uidx] = indices_set
+
+
+    final_users_dict = {}
+    for rt in releventTweets:
+        user_dict = final_users_dict.get(rt.user.idx, {})
+        user_dict["name"] = rt.user.name
+        user_dict["tweeter_id"] = str(rt.user.userid)
+        user_tweets = user_dict.get("tweets", [])
+
+        used_for_similarity = rt.idx in close_tweets_indices[rt.user.idx]
+        user_tweets.append({"tweetid": str(rt.tweetid), "msg":rt.msg, "time":rt.time, "used":used_for_similarity})
         user_dict["tweets"] = user_tweets
-        final_users.append(user_dict)
-        counter+=1
-        if counter >= request_obj.k_users:
-            return final_users
+        final_users_dict[rt.user.idx] = user_dict
 
-    return final_users
+    return [final_users_dict[k] for k in k_indics]
 
