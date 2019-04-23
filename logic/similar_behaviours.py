@@ -120,18 +120,9 @@ def get_similar_behaviour_users(request_obj:behaviour_request_obj):
     logging.debug("sb- loaded user")
     sorted_user_indices, users_argmins = get_similar_behaviour_user_indices(user_tweets_vecs, request_obj.startDate, request_obj.endDate)
     logging.debug("sb- got all sorted users")
-    final_users = []
-    counter = 0
+
 
     k_indics = list(itertools.islice(sorted_user_indices, request_obj.k_users))
-
-
-    releventTweets = Tweet.select(User.name, User.userid, User.idx, Tweet.tweetid, Tweet.msg, Tweet.time, Tweet.idx).join(User, on=(User.userid==Tweet.userid)).where((User.idx << k_indics) & (Tweet.time>request_obj.startDate) & (Tweet.time < request_obj.endDate ))
-
-    for rt in releventTweets:
-        print(rt)
-
-    logging.debug("loaded relevanttweets")
 
     close_tweets_indices = {}
     for uidx in k_indics:
@@ -139,6 +130,15 @@ def get_similar_behaviour_users(request_obj:behaviour_request_obj):
         for v in range(len(users_argmins)):
             indices_set.add(users_argmins[v][uidx])
         close_tweets_indices[uidx] = indices_set
+    logging.debug("mapped used tweets")
+
+
+    releventTweets = Tweet.select(User.name, User.userid, User.idx, Tweet.tweetid, Tweet.msg, Tweet.time, Tweet.idx).join(User, on=(User.userid==Tweet.userid)).where((User.idx << k_indics) & (Tweet.time>request_obj.startDate) & (Tweet.time < request_obj.endDate ))
+    logging.debug("loaded relevanttweets")
+    print("loaded relevanttweets")
+    print(datetime.datetime.now())
+
+
 
 
     final_users_dict = {}
