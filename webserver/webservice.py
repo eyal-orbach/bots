@@ -13,7 +13,7 @@ API_HEADERS = {'Content-Type': 'application/json; charset=utf-8'}
 
 api.init()
 
-@route('twitter-analyzer/api/subjectdensity', method=['POST'])
+@route('/twitter-analyzer/api/subjectdensity', method=['POST'])
 def subj_density():
     r = request
     data = r.json
