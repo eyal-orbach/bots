@@ -37,7 +37,10 @@ def behaviour_similarity():
 @route('/twitter-analyzer/tweet', method=['GET'])
 @route('/twitter-analyzer/density', method=['GET'])
 def wrong_route():
-    redirect("../twitter-analyzer/")
+    url = request.url
+    urlarr = url.rsplit('/', 1)
+    urlbase = urlarr[0] +"/"
+    redirect(urlbase)
 
 @route('/twitter-analyzer/', method=['GET'])
 def startapp():
