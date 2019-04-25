@@ -33,14 +33,6 @@ def behaviour_similarity():
     results = api.behavior_similrity(data)
     return HTTPResponse(code=200, body=results, headers=API_HEADERS)
 
-@route('/twitter-analyzer/home', method=['GET'])
-@route('/twitter-analyzer/tweet', method=['GET'])
-@route('/twitter-analyzer/density', method=['GET'])
-def wrong_route():
-    url = request.url
-    urlarr = url.rsplit('/', 1)
-    urlbase = urlarr[0] +"/"
-    redirect(urlbase)
 
 @route('/twitter-analyzer/', method=['GET'])
 def startapp():
