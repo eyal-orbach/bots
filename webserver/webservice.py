@@ -1,7 +1,6 @@
 import numpy as np
-import time
 from bottle import route, run, request, HTTPResponse
-from bottle import static_file, template
+from bottle import static_file, template, redirect
 
 import config.config as conf
 from logic import api
@@ -33,6 +32,12 @@ def behaviour_similarity():
     data = r.json
     results = api.behavior_similrity(data)
     return HTTPResponse(code=200, body=results, headers=API_HEADERS)
+
+
+@route('/twitter-analyzer/tweet', method=['GET'])
+@route('/twitter-analyzer/density', method=['GET'])
+def wrong_route():
+    redirect("/twitter-analyzer/")
 
 @route('/twitter-analyzer/', method=['GET'])
 def startapp():
