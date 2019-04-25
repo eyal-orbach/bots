@@ -10,9 +10,9 @@ const httpOptions = {
 };
 
 
-var subject_density_api = '/bots/api/subjectdensity'
-var tweet_similarity_api = '/bots/api/tweetsimilarity'
-var behaviour_similarity_api = '/bots/api/behavioursimilarity'
+var subject_density_api = '/api/subjectdensity'
+var tweet_similarity_api = '/api/tweetsimilarity'
+var behaviour_similarity_api = '/api/behavioursimilarity'
 
 @Injectable({
   providedIn: 'root'
