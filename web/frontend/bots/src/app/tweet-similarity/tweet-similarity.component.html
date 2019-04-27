@@ -1,11 +1,13 @@
 <div style="height:125%;">
   <p class="module-info">
-    Here you can search for tweets that are close to the given input sentence.<br>
-    <span class="technical">Technical: Tweets were converted to a 100 dim vector using tf/idf and w2v, distance method can be chosen.</span>
+    Here you can search for tweets that are semanticlly close to the given input sentence.<br>
+    This differs from the <a href="https://twitter.com/search?q=%D7%97%D7%99%D7%A4%D7%95%D7%A9%20%D7%9E%D7%A9%D7%9E%D7%A2%D7%95%D7%AA&src=typed_query">
+    search engine</a> provided by Twitter itself which relies on textual similarity.<br>
+    <span class="technical">Technical: Tweets were converted to a 100 dim vector, summing w2v by tf/idf weighting, distance method can be chosen.</span>
   </p>
   <hr>
   <app-tweet-similarity-settings (resultsTrigger)=handleSettings($event) style="height:25%"></app-tweet-similarity-settings>
-  <br><br>
+  <br>
   <hr>
   <app-results-container [tweetsJson]="resultsJson" [resultsPlaceHolderStyle]="resultsState"></app-results-container>
 </div>

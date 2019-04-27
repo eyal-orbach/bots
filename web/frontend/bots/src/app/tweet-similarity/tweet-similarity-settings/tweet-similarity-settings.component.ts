@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 const K_TWEETS = "kTweets";
 const ORIGIN_TEXT = "originText";
-const PROMPT_ORIGIN_TEXT = "חפש ציוץ כמוני"
+const PROMPT_ORIGIN_TEXT = "חיפוש משמעות"
 const SIMILARITY_METHOD ="sim_method"
 
 @Component({
