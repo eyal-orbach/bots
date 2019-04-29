@@ -1,3 +1,5 @@
+import sys
+
 from db.db_manager import *
 from logic import tweet2vec
 
@@ -36,11 +38,16 @@ def get_dense_users(request_obj:density_request_obj, centroids, densitys):
     return final_users
 
 
+def filter_out_0_densitys(densitys):
+    n = sys.maxsize
+    return np.where(densitys == 0, n, densitys)
+
 def get_dense_users_indices(centroids, densitys, request_obj):
+    modified_densitys = filter_out_0_densitys(densitys)
     base_vec = tweet2vec.instance.get_vec(request_obj.text)
     centroids_minus_base = centroids - base_vec
     distances_from_base = np.linalg.norm(centroids_minus_base, axis=1)
-    factored_array = (distances_from_base * request_obj.proximity_factor) + (densitys * request_obj.density_factor)
+    factored_array = (distances_from_base * request_obj.proximity_factor) + (modified_densitys * request_obj.density_factor)
     return iter(np.argsort(factored_array))
 
 
