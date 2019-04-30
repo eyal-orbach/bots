@@ -14,12 +14,10 @@ class similarity_request_obj:
 
 tweets_vecs = None
 tweets_vecs_magnitudes = None
-def load_twts(twts):
+def load_data():
     global tweets_vecs, tweets_vecs_magnitudes
-    tweets_vecs = twts
+    tweets_vecs = np.load(conf.tweets_vecs_file)
     tweets_vecs_magnitudes = np.linalg.norm(tweets_vecs, axis=1)
-
-
 
 
 def get_similar_tweets_indices(origin_text, requested_dist_method):

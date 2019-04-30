@@ -1,5 +1,8 @@
 import numpy as np
 
+COSINE = "cosine"
+EUCLIDEAN = "euclidean"
+
 
 def get_eucledan_distances(base_vec: np.ndarray, target_vecs: np.ndarray, ignore):
     targets_minus_base = target_vecs - base_vec
@@ -16,7 +19,7 @@ def get_cosine_distances(base_vec: np.ndarray, target_vecs: np.ndarray, target_v
 
 
 def get_dist_method(requested_dist_method):
-    if requested_dist_method == "cosine":
+    if requested_dist_method == COSINE:
         return get_cosine_distances
     else:
         return get_eucledan_distances

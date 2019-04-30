@@ -7,11 +7,11 @@ from errors.UserError import UserError
 import json
 import logging
 
-tweets_vecs = None
 def init():
-    tweets_vecs = np.load(conf.tweets_vecs_file)
-    st.load_twts(tweets_vecs)
+
+    st.load_data()
     sb.load_data()
+    subject.load_data()
 
 
 ORIGIN_TEXT = "originText"
@@ -19,9 +19,9 @@ K_USERS = "k_users"
 SUBJECT_PROXIMITY = "subjectProximity"
 DENSITY = "density"
 
-def subject_density(data, centroids, densitys):
+def subject_density(data):
     obj = subject.density_request_obj(data[K_USERS], data[SUBJECT_PROXIMITY], data[DENSITY], data[ORIGIN_TEXT])
-    raw_results = subject.get_dense_users(obj, centroids, densitys)
+    raw_results = subject.get_dense_users(obj)
     return json.dumps(raw_results, default=str)
 
 
