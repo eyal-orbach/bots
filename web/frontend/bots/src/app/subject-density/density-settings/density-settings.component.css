@@ -16,9 +16,10 @@ a.toollabel{
 
 #show-results-button{
     background-color: #1ca1f2;
-    left: 50%;
-    margin-left: -60px;
-    top: 80%;
+    left: 60%;
+    height: 40px;
+    width: 116px;
+    top: 20px;
 }
 
 #k_userInput{
@@ -32,4 +33,8 @@ a.toollabel{
 
 label.settings-container1{
     margin-left: 20px;
+}
+
+#dist-method-selector{
+    width: 200px;
 }

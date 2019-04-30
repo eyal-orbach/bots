@@ -1,26 +1,35 @@
 
 <div id=settingsBoxContainer fxLayout="row"  fxLayoutGap=10%>
-<div id=settingsContainer1 fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px"  >
-<label class="settings-container1">Enter cutoff number  for the list of returned users</label>
-<input mdInput type="number" id="k_userInput" [value]="k_users" (change)="k_users=$event.target.value">
-
-<label class="settings-container1">Enter origin text to which user's tweets should be similar to <br>(notice sentiments are not taken into consideration, only topical relations)</label>
-<div id="textbox-container" fxLayout="row" fxFlex=60px>
-<textarea matInput placeholder="Origin text" [value]="originText" (change)="doTextareaValueChange($event)" fxFlex = 90%>
+  <div id=settingsContainer1 fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px"  >
+    <label class="settings-container1">Enter cutoff number  for the list of returned users</label>
+    <input mdInput type="number" id="k_userInput" [value]="k_users" (change)="k_users=$event.target.value">
+    <label class="settings-container1">Enter origin text to which user's tweets should be similar to <br>(notice sentiments are not taken into consideration, only topical relations)</label>
+    <div id="textbox-container" fxLayout="row" fxFlex=60px>
+      <textarea matInput placeholder="Origin text" [value]="originText" (change)="doTextareaValueChange($event)" fxFlex = 90%>
   ביבי מבטיח נאום "חד כתער" באסיפה הכללית מחר. מה יהיה שם? איראן? טרור?? צדקת דרכנו??? שואה???? שרה והשגריר המיקרונזי לא
   יכולים לחכות.
-</textarea>
-</div>
-</div>
-<div id=settingsContainer2 fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px" >
-<label>select  what should recive more weight <br>(tweets density vs proximity to the sentence entered)</label>
-<div id="slider-container" fxLayout="row">
-  <a class="toollabel">density of tweets</a>
-  <mat-slider min="0" max="1" step="0.001" [value]="subjectProximity" fxFlex=200px (change)="subjectProximity=$event.value"></mat-slider>
-  <a class="toollabel">similarity to origin</a>
-</div>
-<div id="button-container" fxLayout="row"  fxLayoutGap="10px">
-  <button mat-raised-button color="primary" id="show-results-button" (click)="showResults()">Show results</button>
-</div>
-</div>
+      </textarea>
+    </div>
+  </div>
+  <div id=settingsContainer2 fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px" >
+    <label>select  what should recive more weight <br>(tweets density vs proximity to the sentence entered)</label>
+    <div id="slider-container" fxLayout="row">
+      <a class="toollabel">density of tweets</a>
+      <mat-slider min="0" max="1" step="0.001" [value]="subjectProximity" fxFlex=200px (change)="subjectProximity=$event.value"></mat-slider>
+      <a class="toollabel">similarity to origin</a>
+    </div>
+    <br>
+    <div id="settingsContainer3" fxLayout="row" fxLayoutGap="10px">
+      <div id="dist-method-selector" fxLayout="column" fxLayoutGap="5px">
+        <label>Similarity method</label>
+        <mat-select [(value)]="distanceMethod">
+          <mat-option value="euclidean">euclidean distance</mat-option>
+          <mat-option value="cosine">cosine distance</mat-option>
+        </mat-select>
+      </div>
+      <div id="button-container" fxLayout="row" fxLayoutGap="10px">
+        <button mat-raised-button color="primary" id="show-results-button" (click)="showResults()">Show results</button>
+      </div>
+    </div>
+  </div>
 </div>

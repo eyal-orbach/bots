@@ -7,6 +7,8 @@ const ORIGIN_TEXT = "originText";
 const K_USERS = "k_users";
 const SUBJECT_PROXIMITY = "subjectProximity";
 const DENSITY = "density";
+const SIMILARITY_METHOD = "sim_method"
+
 @Component({
   selector: 'app-density-settings',
   templateUrl: './density-settings.component.html',
@@ -19,7 +21,7 @@ export class DensitySettingsComponent implements OnInit {
   originText: String = PROMPT_ORIGIN_TEXT
   k_users: Number = 20;
   subjectProximity: Number = 0.8;
-
+  distanceMethod: string = "euclidean";
   constructor() {   }
  
   showResults() {
@@ -28,6 +30,7 @@ export class DensitySettingsComponent implements OnInit {
     settingsObj[K_USERS] = this.k_users;
     settingsObj[SUBJECT_PROXIMITY] = this.subjectProximity;
     settingsObj[DENSITY] = (1 - Number(this.subjectProximity));
+    settingsObj[SIMILARITY_METHOD] = this.distanceMethod;
     this.resultsTrigger.emit(settingsObj);
   }
 

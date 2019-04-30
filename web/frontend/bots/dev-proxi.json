@@ -1,6 +1,6 @@
 {
-  "/bots/*": {
-    "target": "http://localhost:8000",
+  "/api/*": {
+    "target": "http://localhost:8000/twitter-analyzer/",
     "secure": false
   }
 }

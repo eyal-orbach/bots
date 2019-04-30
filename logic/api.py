@@ -20,7 +20,8 @@ SUBJECT_PROXIMITY = "subjectProximity"
 DENSITY = "density"
 
 def subject_density(data):
-    obj = subject.density_request_obj(data[K_USERS], data[SUBJECT_PROXIMITY], data[DENSITY], data[ORIGIN_TEXT])
+    obj = subject.density_request_obj(data[K_USERS], data[SUBJECT_PROXIMITY], data[DENSITY], data[ORIGIN_TEXT],
+                                      data[SIMILARITY_METHOD])
     raw_results = subject.get_dense_users(obj)
     return json.dumps(raw_results, default=str)
 

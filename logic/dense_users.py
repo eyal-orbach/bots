@@ -7,10 +7,13 @@ from logic import distance_functions
 MIN_TWEETS = 5
 DIST_METHOD_TYPE = distance_functions.EUCLIDEAN
 
-dist_method = None
-centroids = None
-centroid_magnitudes = None
-densitys = None
+
+euclidean_centroids = None
+euclidean_centroids_magnitudes = None
+euclidean_densitys = None
+cosine_centroids = None
+cosine_centroids_magnitudes = None
+cosine_densitys = None
 
 
 def calc_magnitudes_and_modify(centroids):
@@ -19,26 +22,21 @@ def calc_magnitudes_and_modify(centroids):
 
 
 def load_data():
-    global centroids, densitys, dist_method, centroid_magnitudes
-    if DIST_METHOD_TYPE == distance_functions.EUCLIDEAN:
-        centroids = np.load(conf.centroids_file)
-        densitys = np.load(conf.denstitys_file)
-    else:
-        centroids = np.load(conf.cosine_centroids_file)
-        densitys = np.load(conf.cosine_densitys)
-
-    densitys = filter_out_0_densitys(densitys)
-    centroids, centroid_magnitudes = calc_magnitudes_and_modify(centroids)
-    dist_method = distance_functions.get_dist_method(DIST_METHOD_TYPE)
+    global cosine_densitys, cosine_centroids, cosine_centroids_magnitudes, \
+        euclidean_densitys, euclidean_centroids, euclidean_centroids_magnitudes
+    euclidean_centroids, euclidean_centroids_magnitudes = calc_magnitudes_and_modify(np.load(conf.centroids_file))
+    euclidean_densitys = filter_out_0_densitys(np.load(conf.denstitys_file))
+    cosine_centroids, cosine_centroids_magnitudes = calc_magnitudes_and_modify(np.load(conf.cosine_centroids_file))
+    cosine_densitys = filter_out_0_densitys(np.load(conf.cosine_densitys))
 
 
 class density_request_obj:
-    def __init__(self, k_users, proximity, density, text):
+    def __init__(self, k_users, proximity, density, text, sim_meth="euiclidean"):
         self.k_users = int(k_users)
         self.proximity_factor = float(proximity)
         self.density_factor = float(density)
         self.text = text
-
+        self.sim_method = distance_functions.EUCLIDEAN if sim_meth=="euiclidean" else distance_functions.COSINE
 
 
 def get_dense_users(request_obj: density_request_obj):
@@ -71,7 +69,16 @@ def filter_out_0_densitys(densitys):
     return np.where(modified == 0, n, modified)
 
 
+def get_data_per_similarity_type(sim_method):
+    if sim_method == distance_functions.EUCLIDEAN:
+        return euclidean_centroids, euclidean_centroids_magnitudes, euclidean_densitys
+    else:
+        return cosine_centroids, cosine_centroids_magnitudes, cosine_densitys
+
+
 def get_dense_users_indices(request_obj):
+    centroids, centroid_magnitudes, densitys = get_data_per_similarity_type(request_obj.sim_method)
+    dist_method = distance_functions.get_dist_method(request_obj.sim_method)
     base_vec = tweet2vec.instance.get_vec(request_obj.text)
     distances_from_base = dist_method(base_vec, centroids, centroid_magnitudes)
     factored_array = (distances_from_base * request_obj.proximity_factor) + (densitys * request_obj.density_factor)
