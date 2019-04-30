@@ -5,7 +5,7 @@ from logic import tweet2vec
 from logic import distance_functions
 
 MIN_TWEETS = 5
-DIST_METHOD_TYPE = distance_functions.COSINE
+DIST_METHOD_TYPE = distance_functions.EUCLIDEAN
 
 dist_method = None
 centroids = None
@@ -14,10 +14,8 @@ densitys = None
 
 
 def calc_magnitudes_and_modify(centroids):
-    n = sys.maxsize
-    clean_centroids = np.where(np.isnan(centroids), n, centroids)
     magnitudes = np.linalg.norm(centroids, axis=1)
-    return clean_centroids, magnitudes
+    return centroids, magnitudes
 
 
 def load_data():

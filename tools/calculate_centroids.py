@@ -17,9 +17,10 @@ def calc_euclidean_density(i):
     sum = np.zeros((100,))
     count = 0
     for twt in user_tweets:
-        count += 1
-        sum += twt.vec
-    centroid = sum/float(count)
+        if np.any(np.nan_to_num(twt.vec)):
+            count += 1
+            sum += twt.vec
+    centroid = np.zeros(100) if count == 0 else sum/float(count)
     user_eucleadean_centroids.append(centroid)
     euclidean_variance = get_variance([t.vec for t in user_tweets], centroid, euclidean_dist)
     cosine_variance = get_variance([t.vec for t in user_tweets], centroid, cosine_dist)
@@ -38,10 +39,11 @@ def get_variance(vecs, centroid, dist_func):
     sum_dist = 0
     c = 0
     for vec in vecs:
-        sum_dist += dist_func(vec, centroid)
-        c += 1
-        logging.debug("calc variance via tweet %d" % c)
-    return sum_dist/float(len(vecs))
+        if np.any(np.nan_to_num(vec)):
+            sum_dist += dist_func(vec, centroid)
+            c += 1
+
+    return 0 if c== 0 else sum_dist/float(c)
 
 def calc_cosine_density(i):
     user = User.get(idx=i)
@@ -51,14 +53,14 @@ def calc_cosine_density(i):
     count = 0
     normalized_twts = []
     for twt in user_tweets:
-        count += 1
-        vec_magnitude = np.linalg.norm(twt.vec)
-        normalized_vec = twt.vec / vec_magnitude
-        normalized_twts.append(normalized_vec)
-        cosine_centroid += normalized_vec
-        logging.debug("calc centroid via tweet %d" % count)
+        if np.any(np.nan_to_num(twt.vec)):
+            count += 1
+            vec_magnitude = np.linalg.norm(twt.vec)
+            normalized_vec = twt.vec / vec_magnitude
+            normalized_twts.append(normalized_vec)
+            cosine_centroid += normalized_vec
 
-    cosine_centroid /= float(count)
+    cosine_centroid = np.zeros(100) if count == 0 else cosine_centroid/float(count)
     user_cosine_centroids.append(cosine_centroid)
     avg = get_variance([t.vec for t in user_tweets], cosine_centroid, cosine_dist)
     user_cosine_densitys_to_cosine_centroid.append(avg)
