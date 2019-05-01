@@ -7,7 +7,7 @@
     (change)="embeddTweets = !embeddTweets">
     Embedded tweets
   </mat-slide-toggle>
-  <mat-paginator *ngIf="embeddTweets" [length]="usersAmount" [pageSize]="usersPerPage"  (page)="currPage = $event.pageIndex">
+  <mat-paginator *ngIf="embeddTweets" [length]="tweetsAmount" [pageSize]="tweetsPerPage"  (page)="currPage = $event.pageIndex">
   </mat-paginator>
 </section>
 <div class="results_container">

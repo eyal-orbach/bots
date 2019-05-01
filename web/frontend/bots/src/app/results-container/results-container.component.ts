@@ -3,7 +3,7 @@ import {
 import { MatPaginatorIntl } from '@angular/material';
 import { forEach } from '@angular/router/src/utils/collection';
 export class MatPaginatorIntlUsers extends MatPaginatorIntl {
-  itemsPerPageLabel = 'Users per page';
+  itemsPerPageLabel = 'Tweets per page';
 }
 
 export const RESULTS_STATE = {
@@ -22,7 +22,14 @@ export const RESULTS_STATE = {
 })
 
 export class ResultsContainerComponent implements OnInit{
+  countTweets(tweetsJson): number {
+    var sumTweets = 0;
+    for (var user in tweetsJson) {
+      sumTweets += user["tweets"].size;
+    }
 
+    return sumTweets;
+  }
 
   private _tweetsJson = null;
 
@@ -41,10 +48,10 @@ export class ResultsContainerComponent implements OnInit{
 
       this._tweetsJson = tweetsJson;
       this.resultsPlaceHolderStyle = RESULTS_STATE.LOADED
-      this.usersAmount = this._tweetsJson.length;
+      this.splitJsonToPagesArr(tweetsJson)
     } else {
       this._tweetsJson = tweetsJson;
-      this.usersAmount = 0;
+      this.tweetsAmount = 0;
     }
     this.currPage = 0;
   }
@@ -68,8 +75,9 @@ export class ResultsContainerComponent implements OnInit{
   resultsPlaceholderText = "results will show here"
   embeddTweets: Boolean = true;
 
-  usersAmount = 0;
-  usersPerPage = 10;
+  tweetsPages;
+  tweetsAmount;
+  tweetsPerPage = 100;
   currPage = 0
 
   getXUsers() {
@@ -79,9 +87,56 @@ export class ResultsContainerComponent implements OnInit{
     if (!this.embeddTweets)
       return this._tweetsJson;
 
-    var start = this.currPage * this.usersPerPage;
-    var end = start + this.usersPerPage;
-    return this._tweetsJson.slice(start, end);
+    return this.tweetsPages[this.currPage];
+  }
+
+  splitJsonToPagesArr(tweetsJson){
+    var pagesArray = []
+    var page = [];
+    var pageTweetCount = 0;
+    var totalTweetCount = 0;
+    for (var key in tweetsJson){
+      var user = tweetsJson[key]
+      var utweetsArr = user["tweets"];
+      if(pageTweetCount + utweetsArr.length < this.tweetsPerPage) {
+        totalTweetCount += utweetsArr.length;
+        pageTweetCount += utweetsArr.length;
+        page.push(user)
+        if (pageTweetCount == this.tweetsPerPage) {
+          pagesArray.push(page)
+          page = []
+          pageTweetCount = 0;
+        }
+      }else{
+        var leftTweets = utweetsArr.length;
+        var index = 0;
+        while(leftTweets > 0){
+          var tweetsToPopulate = this.tweetsPerPage - pageTweetCount;
+          var tweets = utweetsArr.slice(index, index + tweetsToPopulate)
+          index+=tweets.length;
+          var newUser = this.jsonCopy(user)
+          newUser["tweets"]=tweets;
+
+          totalTweetCount += tweets.length;
+          pageTweetCount += tweets.length;
+          page.push(newUser);
+          leftTweets -= tweets.length;
+          if(pageTweetCount == this.tweetsPerPage){
+            pagesArray.push(page)
+            page = []
+            pageTweetCount = 0;
+          }
+        }
+      }
+    }
+    pagesArray.push(page)
+
+    this.tweetsAmount = totalTweetCount;
+    this.tweetsPages = pagesArray;
+  }
+
+  jsonCopy(src) {
+    return JSON.parse(JSON.stringify(src));
   }
 
   handleError(errorMsg: string) {
