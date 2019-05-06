@@ -4,6 +4,8 @@ from db.db_manager import *
 from logic import tweet2vec
 from logic import distance_functions
 
+DENSITY_FACTOR_COEFFICIENT = 2
+
 MIN_TWEETS = 5
 DIST_METHOD_TYPE = distance_functions.EUCLIDEAN
 
@@ -81,5 +83,7 @@ def get_dense_users_indices(request_obj):
     dist_method = distance_functions.get_dist_method(request_obj.sim_method)
     base_vec = tweet2vec.instance.get_vec(request_obj.text)
     distances_from_base = dist_method(base_vec, centroids, centroid_magnitudes)
-    factored_array = (distances_from_base * request_obj.proximity_factor) + (densitys * request_obj.density_factor)
+    dens_factor = (request_obj.density_factor * DENSITY_FACTOR_COEFFICIENT) - DENSITY_FACTOR_COEFFICIENT/2
+    prox_factor = 1 #request_obj.proximity_factor
+    factored_array = (distances_from_base * prox_factor) + (densitys * dens_factor)
     return iter(np.argsort(factored_array))
