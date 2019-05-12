@@ -3,7 +3,8 @@
   <div id=settingsContainer1 fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px"  >
     <label class="settings-container1">Enter cutoff number  for the list of returned users</label>
     <input mdInput type="number" id="k_userInput" [value]="k_users" (change)="k_users=$event.target.value">
-    <label class="settings-container1">Enter origin text to which user's tweets should be similar to <br>(notice sentiments are not taken into consideration, only topical relations)</label>
+    <label class="settings-container1">Enter origin text to which user's tweets should be similar to 
+      <br>(notice sentiments are hardley taken into consideration as opposed to topical relation)</label>
     <div id="textbox-container" fxLayout="row" fxFlex=60px>
       <textarea matInput placeholder="Origin text" [value]="originText" (change)="doTextareaValueChange($event)" fxFlex = 90%>
   ביבי מבטיח נאום "חד כתער" באסיפה הכללית מחר. מה יהיה שם? איראן? טרור?? צדקת דרכנו??? שואה???? שרה והשגריר המיקרונזי לא
@@ -12,11 +13,11 @@
     </div>
   </div>
   <div id=settingsContainer2 fxLayout="column" fxLayout.xs="row" fxLayoutGap="10px" >
-    <label>select  what should recive more weight <br>(tweets density vs proximity to the sentence entered)</label>
+    <label>You can increment the significance of tweet density<br> (users with more reptitive behaviour)</label>
     <div id="slider-container" fxLayout="row">
-      <a class="toollabel">density of tweets</a>
-      <mat-slider min="0" max="1" step="0.001" [value]="subjectProximity" fxFlex=200px (change)="subjectProximity=$event.value"></mat-slider>
-      <a class="toollabel">similarity to origin</a>
+      <!-- <a class="toollabel">similarity to origin</a> -->
+      <mat-slider min="0" max="1" step="0.001"  [thumbLabel]="showThumbnail" [value]="densityFactor" fxFlex=200px (change)="densityFactor=$event.value"></mat-slider>
+      <a class="toollabel">Density of tweets</a>
     </div>
     <br>
     <div id="settingsContainer3" fxLayout="row" fxLayoutGap="10px">

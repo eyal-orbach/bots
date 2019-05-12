@@ -20,16 +20,17 @@ export class DensitySettingsComponent implements OnInit {
 
   originText: String = PROMPT_ORIGIN_TEXT
   k_users: Number = 20;
-  subjectProximity: Number = 0.8;
+  densityFactor: Number = 0.02;
   distanceMethod: string = "euclidean";
+  showThumbnail = false;
   constructor() {   }
  
   showResults() {
     var settingsObj = {}
     settingsObj[ORIGIN_TEXT] = this.originText;
     settingsObj[K_USERS] = this.k_users;
-    settingsObj[SUBJECT_PROXIMITY] = this.subjectProximity;
-    settingsObj[DENSITY] = (1 - Number(this.subjectProximity));
+    settingsObj[DENSITY] = this.densityFactor;
+    settingsObj[SUBJECT_PROXIMITY] = (1 - Number(this.densityFactor));
     settingsObj[SIMILARITY_METHOD] = this.distanceMethod;
     this.resultsTrigger.emit(settingsObj);
   }

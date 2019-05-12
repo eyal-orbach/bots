@@ -2,8 +2,8 @@
   <p class="module-info">
     Here you can search for users which mostly tweet about a single topic, meaning their topical variance is low. 
     <br>
-    <span class="technical">Technical: Once tweets are calculated as vectors, each user has a eucldiean centroid. 
-    Density is the user's variance wrt the centroid,<br> and due to the multiple objectives it should be weighted vs the centroid's distance from the given sentence.</span>
+    <span class="technical">Technical: Once tweets are represented as vectors, each user has a centroid (both euclidean and cosine centroids are calculated). 
+    <br>Density is the user's variance with respect to the centroid, the returned users are ranked by both the centroid's distance from the given sentence and their density.</span>
   </p>
   <hr>
   <app-density-settings (resultsTrigger) = handleSettings($event) style="height:25%" ></app-density-settings >
