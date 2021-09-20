@@ -6,7 +6,7 @@ It was developed by Eyal Orbach at the Bar Ilan University NLP Lab under the sup
 a project set to expose un-organic activity on the web, attempting to influence the Israeli 2019 elections.
 The Big Bots Project has gained significant global and local news coverage.
 
-This code, along with data composed of 5 million tweets from December 30, 2018 to March 26th, 2019, is hoseted as a service on the Bar Ilan NLP lab at this address
+This code, along with data composed of 5 million tweets from December 30, 2018 to March 26th, 2019, is hoseted as a service on the Bar Ilan NLP lab servers
 https://nlp.biu.ac.il/~eyalo/twitter-analyzer/
 
 This application does not claim to make the final classification between bots, puppets, fake or real users,
