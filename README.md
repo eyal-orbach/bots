@@ -14,9 +14,9 @@ rather, it helps sort and view Twitter data according to the below described log
 investigate and classify users or interactions.
 It is easy to follow the links here to the actual Twitter accounts/comments and highly advised, to make your own mind according to your findings.
 
-The project currently supports Hebrew data but a should work for any language as long as:
+The project currently supports Hebrew data but can easily be extended to any language as long as:
 * Significanly large amount of tweets is collected.
-* Word vector embeddings for the language are supplied.
+* Static Word vector embeddings for the language are supplied (e.g. word2vec/Glove).
 
 ## Details
 
